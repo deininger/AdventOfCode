@@ -1,0 +1,126 @@
+December 19: Not Enough Minerals
+Starting Blueprint 1: Ore (4), Clay (4), Obsidian (4,8), Geode (2,18)
+Blueprint 1 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=21, CLAY=10, ORE=4} Robots: {GEODE=0, OBSIDIAN=3, CLAY=2, ORE=1}
+Starting Blueprint 2: Ore (4), Clay (4), Obsidian (3,19), Geode (4,15)
+Blueprint 2 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=8, CLAY=11, ORE=2} Robots: {GEODE=0, OBSIDIAN=2, CLAY=4, ORE=1}
+Starting Blueprint 3: Ore (3), Clay (4), Obsidian (3,17), Geode (3,8)
+Blueprint 3 has quality 6, final state: [24] Resources: {GEODE=2, OBSIDIAN=10, CLAY=24, ORE=12} Robots: {GEODE=1, OBSIDIAN=4, CLAY=9, ORE=4}
+Starting Blueprint 4: Ore (3), Clay (3), Obsidian (2,19), Geode (2,12)
+Blueprint 4 has quality 4, final state: [24] Resources: {GEODE=1, OBSIDIAN=7, CLAY=43, ORE=6} Robots: {GEODE=1, OBSIDIAN=3, CLAY=9, ORE=2}
+Starting Blueprint 5: Ore (4), Clay (3), Obsidian (3,11), Geode (4,7)
+Blueprint 5 has quality 30, final state: [24] Resources: {GEODE=6, OBSIDIAN=10, CLAY=25, ORE=4} Robots: {GEODE=2, OBSIDIAN=4, CLAY=5, ORE=2}
+Starting Blueprint 6: Ore (4), Clay (4), Obsidian (4,7), Geode (2,19)
+Blueprint 6 has quality 6, final state: [24] Resources: {GEODE=1, OBSIDIAN=8, CLAY=16, ORE=5} Robots: {GEODE=1, OBSIDIAN=4, CLAY=4, ORE=2}
+Starting Blueprint 7: Ore (4), Clay (3), Obsidian (2,14), Geode (4,11)
+Blueprint 7 has quality 14, final state: [24] Resources: {GEODE=2, OBSIDIAN=8, CLAY=18, ORE=2} Robots: {GEODE=1, OBSIDIAN=3, CLAY=4, ORE=1}
+Starting Blueprint 8: Ore (4), Clay (4), Obsidian (2,7), Geode (3,10)
+Blueprint 8 has quality 40, final state: [24] Resources: {GEODE=5, OBSIDIAN=8, CLAY=6, ORE=5} Robots: {GEODE=2, OBSIDIAN=4, CLAY=2, ORE=2}
+Starting Blueprint 9: Ore (3), Clay (3), Obsidian (3,6), Geode (2,16)
+Blueprint 9 has quality 63, final state: [24] Resources: {GEODE=7, OBSIDIAN=23, CLAY=28, ORE=8} Robots: {GEODE=2, OBSIDIAN=8, CLAY=6, ORE=3}
+Starting Blueprint 10: Ore (4), Clay (4), Obsidian (4,5), Geode (3,15)
+Blueprint 10 has quality 20, final state: [24] Resources: {GEODE=2, OBSIDIAN=12, CLAY=13, ORE=4} Robots: {GEODE=1, OBSIDIAN=4, CLAY=3, ORE=2}
+Starting Blueprint 11: Ore (3), Clay (4), Obsidian (4,10), Geode (2,13)
+Blueprint 11 has quality 33, final state: [24] Resources: {GEODE=3, OBSIDIAN=19, CLAY=26, ORE=10} Robots: {GEODE=1, OBSIDIAN=6, CLAY=8, ORE=4}
+Starting Blueprint 12: Ore (3), Clay (4), Obsidian (3,12), Geode (3,17)
+Blueprint 12 has quality 12, final state: [24] Resources: {GEODE=1, OBSIDIAN=8, CLAY=31, ORE=20} Robots: {GEODE=1, OBSIDIAN=4, CLAY=8, ORE=5}
+Starting Blueprint 13: Ore (2), Clay (4), Obsidian (4,19), Geode (2,18)
+Blueprint 13 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=26, CLAY=32, ORE=8} Robots: {GEODE=0, OBSIDIAN=5, CLAY=12, ORE=4}
+Starting Blueprint 14: Ore (3), Clay (4), Obsidian (3,6), Geode (4,11)
+Blueprint 14 has quality 98, final state: [24] Resources: {GEODE=7, OBSIDIAN=23, CLAY=23, ORE=7} Robots: {GEODE=2, OBSIDIAN=7, CLAY=5, ORE=3}
+Starting Blueprint 15: Ore (4), Clay (4), Obsidian (4,12), Geode (3,8)
+Blueprint 15 has quality 30, final state: [24] Resources: {GEODE=2, OBSIDIAN=6, CLAY=11, ORE=4} Robots: {GEODE=1, OBSIDIAN=2, CLAY=3, ORE=2}
+Starting Blueprint 16: Ore (4), Clay (4), Obsidian (2,16), Geode (4,16)
+Blueprint 16 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=11, CLAY=18, ORE=4} Robots: {GEODE=0, OBSIDIAN=2, CLAY=4, ORE=1}
+Starting Blueprint 17: Ore (4), Clay (3), Obsidian (2,7), Geode (3,8)
+Blueprint 17 has quality 187, final state: [24] Resources: {GEODE=11, OBSIDIAN=6, CLAY=20, ORE=5} Robots: {GEODE=3, OBSIDIAN=3, CLAY=3, ORE=2}
+Starting Blueprint 18: Ore (2), Clay (3), Obsidian (3,11), Geode (2,16)
+Blueprint 18 has quality 90, final state: [24] Resources: {GEODE=5, OBSIDIAN=14, CLAY=27, ORE=25} Robots: {GEODE=2, OBSIDIAN=7, CLAY=8, ORE=4}
+Starting Blueprint 19: Ore (3), Clay (3), Obsidian (3,11), Geode (2,8)
+Blueprint 19 has quality 152, final state: [24] Resources: {GEODE=8, OBSIDIAN=10, CLAY=41, ORE=9} Robots: {GEODE=3, OBSIDIAN=5, CLAY=8, ORE=3}
+Starting Blueprint 20: Ore (2), Clay (3), Obsidian (3,11), Geode (3,14)
+Blueprint 20 has quality 140, final state: [24] Resources: {GEODE=7, OBSIDIAN=24, CLAY=24, ORE=6} Robots: {GEODE=2, OBSIDIAN=8, CLAY=8, ORE=3}
+Starting Blueprint 21: Ore (3), Clay (4), Obsidian (2,15), Geode (2,13)
+Blueprint 21 has quality 21, final state: [24] Resources: {GEODE=1, OBSIDIAN=8, CLAY=30, ORE=17} Robots: {GEODE=1, OBSIDIAN=4, CLAY=9, ORE=4}
+Starting Blueprint 22: Ore (4), Clay (4), Obsidian (3,9), Geode (3,7)
+Blueprint 22 has quality 110, final state: [24] Resources: {GEODE=5, OBSIDIAN=4, CLAY=16, ORE=4} Robots: {GEODE=2, OBSIDIAN=2, CLAY=2, ORE=1}
+Starting Blueprint 23: Ore (2), Clay (4), Obsidian (3,19), Geode (4,8)
+Blueprint 23 has quality 92, final state: [24] Resources: {GEODE=4, OBSIDIAN=8, CLAY=49, ORE=12} Robots: {GEODE=2, OBSIDIAN=4, CLAY=11, ORE=4}
+Starting Blueprint 24: Ore (3), Clay (4), Obsidian (4,5), Geode (3,12)
+Blueprint 24 has quality 192, final state: [24] Resources: {GEODE=8, OBSIDIAN=14, CLAY=18, ORE=11} Robots: {GEODE=3, OBSIDIAN=7, CLAY=4, ORE=4}
+Starting Blueprint 25: Ore (2), Clay (4), Obsidian (2,15), Geode (3,16)
+Blueprint 25 has quality 50, final state: [24] Resources: {GEODE=2, OBSIDIAN=17, CLAY=28, ORE=21} Robots: {GEODE=1, OBSIDIAN=6, CLAY=10, ORE=4}
+Starting Blueprint 26: Ore (2), Clay (3), Obsidian (3,17), Geode (3,10)
+Blueprint 26 has quality 156, final state: [24] Resources: {GEODE=6, OBSIDIAN=16, CLAY=27, ORE=6} Robots: {GEODE=2, OBSIDIAN=6, CLAY=10, ORE=3}
+Starting Blueprint 27: Ore (3), Clay (3), Obsidian (3,9), Geode (3,7)
+Blueprint 27 has quality 324, final state: [24] Resources: {GEODE=12, OBSIDIAN=17, CLAY=8, ORE=8} Robots: {GEODE=3, OBSIDIAN=6, CLAY=4, ORE=3}
+Starting Blueprint 28: Ore (2), Clay (4), Obsidian (4,11), Geode (3,8)
+Blueprint 28 has quality 252, final state: [24] Resources: {GEODE=9, OBSIDIAN=16, CLAY=38, ORE=11} Robots: {GEODE=3, OBSIDIAN=6, CLAY=8, ORE=4}
+Starting Blueprint 29: Ore (2), Clay (3), Obsidian (3,16), Geode (2,11)
+Blueprint 29 has quality 145, final state: [24] Resources: {GEODE=5, OBSIDIAN=15, CLAY=33, ORE=8} Robots: {GEODE=2, OBSIDIAN=6, CLAY=10, ORE=3}
+Starting Blueprint 30: Ore (3), Clay (3), Obsidian (3,17), Geode (2,13)
+Blueprint 30 has quality 60, final state: [24] Resources: {GEODE=2, OBSIDIAN=13, CLAY=25, ORE=7} Robots: {GEODE=1, OBSIDIAN=5, CLAY=10, ORE=3}
+Part 1: total quality = 2327 // too low
+
+December 19: Not Enough Minerals
+Starting Blueprint 1: Ore (4), Clay (4), Obsidian (4,8), Geode (2,18)
+Blueprint 1 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=21, CLAY=10, ORE=4} Robots: {GEODE=0, OBSIDIAN=3, CLAY=2, ORE=1}
+Starting Blueprint 2: Ore (4), Clay (4), Obsidian (3,19), Geode (4,15)
+Blueprint 2 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=8, CLAY=11, ORE=2} Robots: {GEODE=0, OBSIDIAN=2, CLAY=4, ORE=1}
+Starting Blueprint 3: Ore (3), Clay (4), Obsidian (3,17), Geode (3,8)
+Blueprint 3 has quality 6, final state: [24] Resources: {GEODE=2, OBSIDIAN=10, CLAY=24, ORE=12} Robots: {GEODE=1, OBSIDIAN=4, CLAY=9, ORE=4}
+Starting Blueprint 4: Ore (3), Clay (3), Obsidian (2,19), Geode (2,12)
+Blueprint 4 has quality 4, final state: [24] Resources: {GEODE=1, OBSIDIAN=7, CLAY=43, ORE=6} Robots: {GEODE=1, OBSIDIAN=3, CLAY=9, ORE=2}
+Starting Blueprint 5: Ore (4), Clay (3), Obsidian (3,11), Geode (4,7)
+Blueprint 5 has quality 30, final state: [24] Resources: {GEODE=6, OBSIDIAN=10, CLAY=25, ORE=4} Robots: {GEODE=2, OBSIDIAN=4, CLAY=5, ORE=2}
+Starting Blueprint 6: Ore (4), Clay (4), Obsidian (4,7), Geode (2,19)
+Blueprint 6 has quality 6, final state: [24] Resources: {GEODE=1, OBSIDIAN=8, CLAY=16, ORE=5} Robots: {GEODE=1, OBSIDIAN=4, CLAY=4, ORE=2}
+Starting Blueprint 7: Ore (4), Clay (3), Obsidian (2,14), Geode (4,11)
+Blueprint 7 has quality 14, final state: [24] Resources: {GEODE=2, OBSIDIAN=8, CLAY=18, ORE=2} Robots: {GEODE=1, OBSIDIAN=3, CLAY=4, ORE=1}
+Starting Blueprint 8: Ore (4), Clay (4), Obsidian (2,7), Geode (3,10)
+Blueprint 8 has quality 40, final state: [24] Resources: {GEODE=5, OBSIDIAN=8, CLAY=6, ORE=5} Robots: {GEODE=2, OBSIDIAN=4, CLAY=2, ORE=2}
+Starting Blueprint 9: Ore (3), Clay (3), Obsidian (3,6), Geode (2,16)
+Blueprint 9 has quality 63, final state: [24] Resources: {GEODE=7, OBSIDIAN=23, CLAY=28, ORE=8} Robots: {GEODE=2, OBSIDIAN=8, CLAY=6, ORE=3}
+Starting Blueprint 10: Ore (4), Clay (4), Obsidian (4,5), Geode (3,15)
+Blueprint 10 has quality 20, final state: [24] Resources: {GEODE=2, OBSIDIAN=12, CLAY=13, ORE=4} Robots: {GEODE=1, OBSIDIAN=4, CLAY=3, ORE=2}
+Starting Blueprint 11: Ore (3), Clay (4), Obsidian (4,10), Geode (2,13)
+Blueprint 11 has quality 33, final state: [24] Resources: {GEODE=3, OBSIDIAN=19, CLAY=26, ORE=10} Robots: {GEODE=1, OBSIDIAN=6, CLAY=8, ORE=4}
+Starting Blueprint 12: Ore (3), Clay (4), Obsidian (3,12), Geode (3,17)
+Blueprint 12 has quality 12, final state: [24] Resources: {GEODE=1, OBSIDIAN=8, CLAY=31, ORE=20} Robots: {GEODE=1, OBSIDIAN=4, CLAY=8, ORE=5}
+Starting Blueprint 13: Ore (2), Clay (4), Obsidian (4,19), Geode (2,18)
+Blueprint 13 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=26, CLAY=32, ORE=8} Robots: {GEODE=0, OBSIDIAN=5, CLAY=12, ORE=4}
+Starting Blueprint 14: Ore (3), Clay (4), Obsidian (3,6), Geode (4,11)
+Blueprint 14 has quality 112, final state: [24] Resources: {GEODE=8, OBSIDIAN=15, CLAY=23, ORE=15} Robots: {GEODE=3, OBSIDIAN=7, CLAY=5, ORE=4}
+Starting Blueprint 15: Ore (4), Clay (4), Obsidian (4,12), Geode (3,8)
+Blueprint 15 has quality 30, final state: [24] Resources: {GEODE=2, OBSIDIAN=6, CLAY=11, ORE=4} Robots: {GEODE=1, OBSIDIAN=2, CLAY=3, ORE=2}
+Starting Blueprint 16: Ore (4), Clay (4), Obsidian (2,16), Geode (4,16)
+Blueprint 16 has quality 0, final state: [24] Resources: {GEODE=0, OBSIDIAN=11, CLAY=18, ORE=4} Robots: {GEODE=0, OBSIDIAN=2, CLAY=4, ORE=1}
+Starting Blueprint 17: Ore (4), Clay (3), Obsidian (2,7), Geode (3,8)
+Blueprint 17 has quality 187, final state: [24] Resources: {GEODE=11, OBSIDIAN=6, CLAY=20, ORE=5} Robots: {GEODE=3, OBSIDIAN=3, CLAY=3, ORE=2}
+Starting Blueprint 18: Ore (2), Clay (3), Obsidian (3,11), Geode (2,16)
+Blueprint 18 has quality 90, final state: [24] Resources: {GEODE=5, OBSIDIAN=14, CLAY=27, ORE=25} Robots: {GEODE=2, OBSIDIAN=7, CLAY=8, ORE=4}
+Starting Blueprint 19: Ore (3), Clay (3), Obsidian (3,11), Geode (2,8)
+Blueprint 19 has quality 152, final state: [24] Resources: {GEODE=8, OBSIDIAN=10, CLAY=41, ORE=9} Robots: {GEODE=3, OBSIDIAN=5, CLAY=8, ORE=3}
+Starting Blueprint 20: Ore (2), Clay (3), Obsidian (3,11), Geode (3,14)
+Blueprint 20 has quality 140, final state: [24] Resources: {GEODE=7, OBSIDIAN=24, CLAY=24, ORE=6} Robots: {GEODE=2, OBSIDIAN=8, CLAY=8, ORE=3}
+Starting Blueprint 21: Ore (3), Clay (4), Obsidian (2,15), Geode (2,13)
+Blueprint 21 has quality 21, final state: [24] Resources: {GEODE=1, OBSIDIAN=8, CLAY=30, ORE=17} Robots: {GEODE=1, OBSIDIAN=4, CLAY=9, ORE=4}
+Starting Blueprint 22: Ore (4), Clay (4), Obsidian (3,9), Geode (3,7)
+Blueprint 22 has quality 110, final state: [24] Resources: {GEODE=5, OBSIDIAN=4, CLAY=16, ORE=4} Robots: {GEODE=2, OBSIDIAN=2, CLAY=2, ORE=1}
+Starting Blueprint 23: Ore (2), Clay (4), Obsidian (3,19), Geode (4,8)
+Blueprint 23 has quality 92, final state: [24] Resources: {GEODE=4, OBSIDIAN=8, CLAY=49, ORE=12} Robots: {GEODE=2, OBSIDIAN=4, CLAY=11, ORE=4}
+Starting Blueprint 24: Ore (3), Clay (4), Obsidian (4,5), Geode (3,12)
+Blueprint 24 has quality 192, final state: [24] Resources: {GEODE=8, OBSIDIAN=14, CLAY=18, ORE=11} Robots: {GEODE=3, OBSIDIAN=7, CLAY=4, ORE=4}
+Starting Blueprint 25: Ore (2), Clay (4), Obsidian (2,15), Geode (3,16)
+Blueprint 25 has quality 50, final state: [24] Resources: {GEODE=2, OBSIDIAN=17, CLAY=28, ORE=21} Robots: {GEODE=1, OBSIDIAN=6, CLAY=10, ORE=4}
+Starting Blueprint 26: Ore (2), Clay (3), Obsidian (3,17), Geode (3,10)
+Blueprint 26 has quality 156, final state: [24] Resources: {GEODE=6, OBSIDIAN=16, CLAY=27, ORE=6} Robots: {GEODE=2, OBSIDIAN=6, CLAY=10, ORE=3}
+Starting Blueprint 27: Ore (3), Clay (3), Obsidian (3,9), Geode (3,7)
+Blueprint 27 has quality 324, final state: [24] Resources: {GEODE=12, OBSIDIAN=17, CLAY=8, ORE=8} Robots: {GEODE=3, OBSIDIAN=6, CLAY=4, ORE=3}
+Starting Blueprint 28: Ore (2), Clay (4), Obsidian (4,11), Geode (3,8)
+Blueprint 28 has quality 252, final state: [24] Resources: {GEODE=9, OBSIDIAN=16, CLAY=38, ORE=11} Robots: {GEODE=3, OBSIDIAN=6, CLAY=8, ORE=4}
+Starting Blueprint 29: Ore (2), Clay (3), Obsidian (3,16), Geode (2,11)
+Blueprint 29 has quality 145, final state: [24] Resources: {GEODE=5, OBSIDIAN=15, CLAY=33, ORE=8} Robots: {GEODE=2, OBSIDIAN=6, CLAY=10, ORE=3}
+Starting Blueprint 30: Ore (3), Clay (3), Obsidian (3,17), Geode (2,13)
+Blueprint 30 has quality 60, final state: [24] Resources: {GEODE=2, OBSIDIAN=13, CLAY=25, ORE=7} Robots: {GEODE=1, OBSIDIAN=5, CLAY=10, ORE=3}
+Part 1: total quality = 2341 // Correct!
+

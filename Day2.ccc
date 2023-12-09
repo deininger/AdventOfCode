@@ -1,0 +1,51 @@
+PARSER_PACKAGE=aoc.year23.parser;
+PARSER_CLASS=Day2Parser;
+
+SKIP : " " | "\t" ;
+
+TOKEN :
+	<CR : "\n">
+	|
+	<GAME : "Game">
+	|
+	<COLON : ":">
+	|
+	<NUMBER : (["0"-"9"])+>
+	|
+	<COMMA : ",">
+	|
+	<SEMICOLON : ";">
+	|
+	<RED : "red">
+	|
+	<GREEN : "green">
+	|
+	<BLUE : "blue">
+	;
+
+
+ColorDraw :
+	<NUMBER> (<RED> | <GREEN> | <BLUE>) ;
+
+Collection :
+	ColorDraw (<COMMA> ColorDraw)* ;
+
+Line :
+	<GAME> <NUMBER> <COLON> Collection (<SEMICOLON> Collection)* ;
+
+Root : (Line <CR>)* <EOF> ;
+
+INJECT PARSER_CLASS : 
+    import java.util.Scanner;
+{
+    static public void main(String[] args) throws ParseException {
+       Scanner scanner = new Scanner(System.in);
+       String input = scanner.nextLine();
+       PARSER_CLASS parser = new PARSER_CLASS(input);
+       parser.Root();
+       Node root = parser.rootNode();
+       System.out.println("Dumping the AST...");
+       root.dump();
+    }
+}
+
