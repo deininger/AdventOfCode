@@ -45,14 +45,19 @@ public class Day12DP extends PuzzleApp {
 		long solutionCount = 0;
 		
 		ConditionRecord stepCR = new ConditionRecord(cr); // Avoid altering our input CR!
-		int result = stepCR.step();
+		
+		// consume characters until we encounter a '?' 
+		// or determine that we have or can't have a solution:
+		int result = stepCR.step(); 
 		
 		if (result == -1) {
+			// Analyze both possibilities:
 			ConditionRecord rockCR = new ConditionRecord(stepCR).pushSpring("#");
 			ConditionRecord spaceCR = new ConditionRecord(stepCR).pushSpring(".");
 			// System.out.println("  Branching into " + rockCR + " and " + spaceCR);
 			solutionCount = analyze(rockCR) + analyze(spaceCR);
-		} else {
+		} else { 
+			// We either have a solution (1) or we don't (0):
 			solutionCount += result;
 		}
 		
@@ -65,9 +70,9 @@ public class Day12DP extends PuzzleApp {
 	public void process() {
 		for (int i = 0; i < conditionRecords.size(); i++) {
 			ConditionRecord cr = conditionRecords.get(i);
-			System.out.println("Starting " + cr);
+			// System.out.println("Starting " + cr);
 			long result = analyze(new ConditionRecord(cr));
-			System.out.println("Completed solution count: " + result + " (memo size " + analysisResults.size() + ")");
+			// System.out.println("Completed solution count: " + result + " (memo size " + analysisResults.size() + ")");
 			totalSolutions += result;
 		}
 	}
@@ -112,14 +117,14 @@ public class Day12DP extends PuzzleApp {
 		}
 		
 		public int decrementCount() {
-			if (counts.size() == 0) return -1;
+			if (counts.isEmpty()) return -1;
 			int count = counts.remove(0);
 			counts.add(0, --count);
 			return count;
 		}
 		
 		public int popCount() {
-			if (counts.size() == 0) return -1;
+			if (counts.isEmpty()) return -1;
 			return counts.remove(0);
 		}
 		
@@ -151,11 +156,7 @@ public class Day12DP extends PuzzleApp {
 					} else {
 						return -1; // Indicates the recursive analysis must try both paths
 					}
-				} else {
-					throw new UnsupportedOperationException("Encountered '" + c + "' when popping");
-				}
-				
-				// System.out.println("    Stepping " + this);
+				}				
 			}
 			
 			if (counts.size() == 0 || (counts.size() == 1 && counts.get(0) == 0) ) {
