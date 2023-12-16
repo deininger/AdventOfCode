@@ -16,6 +16,11 @@ public class Loc {
 		this.y = y;
 	}
 
+	public Loc(Loc other) {
+		this.x = other.x;
+		this.y = other.y;
+	}
+
 	public int x() {
 		return x;
 	}
@@ -31,7 +36,18 @@ public class Loc {
 	public void setY(int y) {
 		this.y = y;
 	}
-		
+	
+	public Loc step(Direction d) {
+		Loc newLoc = new Loc(this);
+		switch (d) {
+			case UP: newLoc.y--; break;
+			case DOWN: newLoc.y++; break;
+			case LEFT: newLoc.x--; break;
+			case RIGHT: newLoc.x++; break;
+		}
+		return newLoc;
+	}
+
 	/**
 	 * The distance between two Locs is the larger of the absolute differences of
 	 * their Cartesian coordinates.

@@ -3,7 +3,7 @@ package aoc.util;
 import java.util.HashMap;
 import java.util.Map;
 
-enum Direction {
+public enum Direction {
 	RIGHT(0), DOWN(1), LEFT(2), UP(3);
 
 	private static final Map<Integer, Direction> BY_INTVALUE = new HashMap<>();
@@ -32,6 +32,10 @@ enum Direction {
 		return Direction.withIntValue((this.intValue + 1) % 4);
 	}
 	
+	public Direction turnAround() {
+		return Direction.withIntValue((this.intValue + 2) % 4);
+	}		
+
 	public Direction turnLeft() {
 		return Direction.withIntValue((this.intValue + 3) % 4);
 	}		
