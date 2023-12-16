@@ -106,17 +106,19 @@ public class Day16 extends PuzzleApp {
 		System.out.println("Part 1: Visited " + traversalCount + " locations");
 
 		// Part 2: Try from all possible entry points:
-		int maxEnergizedTiles = 0;
+		int maxEnergizedTiles = traversalCount; // Might as well use part 1 as our minimum
+		LocationAndDirection maxLD = start;
 
 		for (int r = 0; r < grid.height(); r++) { // Along the left edge, moving RIGHT:
 			visited.clear();
 			queue.clear();
 			start = new LocationAndDirection(new Loc(0, r), Direction.RIGHT);
 			traversalCount = traverse(start);
-			System.out.println("... " + start + " --> " + traversalCount);
+			// System.out.println("... " + start + " --> " + traversalCount);
 
 			if (traversalCount > maxEnergizedTiles) {
 				maxEnergizedTiles = traversalCount;
+				maxLD = start;
 			}
 		}
 
@@ -125,10 +127,11 @@ public class Day16 extends PuzzleApp {
 			queue.clear();
 			start = new LocationAndDirection(new Loc(grid.width()-1, r), Direction.LEFT);
 			traversalCount = traverse(start);
-			System.out.println("... " + start + " --> " + traversalCount);
+			// System.out.println("... " + start + " --> " + traversalCount);
 
 			if (traversalCount > maxEnergizedTiles) {
 				maxEnergizedTiles = traversalCount;
+				maxLD = start;
 			}
 		}
 
@@ -137,11 +140,11 @@ public class Day16 extends PuzzleApp {
 			queue.clear();
 			start = new LocationAndDirection(new Loc(c, 0), Direction.DOWN);
 			traversalCount = traverse(start);
-			System.out.println("... " + start + " --> " + traversalCount);
+			// System.out.println("... " + start + " --> " + traversalCount);
 
 			if (traversalCount > maxEnergizedTiles) {
 				maxEnergizedTiles = traversalCount;
-				System.out.println("... max = " + maxEnergizedTiles);
+				maxLD = start;
 			}
 		}
 
@@ -150,14 +153,15 @@ public class Day16 extends PuzzleApp {
 			queue.clear();
 			start = new LocationAndDirection(new Loc(c, grid.height()-1), Direction.UP);
 			traversalCount = traverse(start);
-			System.out.println("... " + start + " --> " + traversalCount);
+			// System.out.println("... " + start + " --> " + traversalCount);
 
 			if (traversalCount > maxEnergizedTiles) {
 				maxEnergizedTiles = traversalCount;
+				maxLD = start;
 			}
 		}
 
-		System.out.println("Part 2: Maximum Visited " + maxEnergizedTiles + " locations (" + (100.0 * maxEnergizedTiles) / (grid.width() * grid.height()) + "%)");
+		System.out.println("Part 2: Maximum Visited " + maxEnergizedTiles + " locations (" + (100.0 * maxEnergizedTiles) / (grid.width() * grid.height()) + "%), starting at " + maxLD);
 	}
 
 	public void results() {
