@@ -28,6 +28,24 @@ public class Day15 extends PuzzleApp {
 	private Box[] boxes = new Box[256];
 	private long sumOfFocusingPower = 0;
 
+	/**
+	 * Calculates a hash value for the given string.
+	 * 
+	 * This uses a simple hashing algorithm that sums the character values,
+	 * multiplies by 17, and takes the result modulo 256.
+	 * 
+	 * @param s The string to hash
+	 * @return The hash value as an integer between 0-255
+	 */
+	int hash(String s) {
+		return s.chars().reduce(0, (acc, val) -> {
+			acc += val;
+			acc *= 17;
+			acc %= 256;
+			return acc;
+		});
+	}
+
 	public void process() {
 		for (int b = 0; b < 256; b++) {
 			boxes[b] = new Box(b);
@@ -35,7 +53,7 @@ public class Day15 extends PuzzleApp {
 		
 		for (int i = 0; i < steps.length; i++) {
 			// Part 1:
-			long hash = steps[i].chars().reduce(0, (acc, val) -> { acc += val; acc *= 17; acc %= 256; return acc; } );
+			int hash = hash(steps[i]);
 			sumOfHashResults += hash;
 			
 			// Part 2:
@@ -49,7 +67,7 @@ public class Day15 extends PuzzleApp {
 				focalLength = Integer.parseInt(parts[1]);
 			}
 			
-			int box = code.chars().reduce(0, (acc, val) -> { acc += val; acc *= 17; acc %= 256; return acc; } );
+			int box = hash(code);
 			// System.out.println("Parsed " + steps[i] + " into " + code + op + slot + " box " + box);		
 			
 			Lens lens = new Lens(code, focalLength);
@@ -66,6 +84,7 @@ public class Day15 extends PuzzleApp {
 		}
 	}
 	
+	/*
 	private void printBoxes() {
 		for (int b = 0; b < 256; b++) {
 			if (!boxes[b].isEmpty()) {
@@ -73,6 +92,7 @@ public class Day15 extends PuzzleApp {
 			}
 		}
 	}	
+	*/
 
 	public void results() {
 		System.out.println("Part 1: Sum of HASH results is " + sumOfHashResults);
@@ -99,7 +119,7 @@ public class Day15 extends PuzzleApp {
 		}
 		
 		public void addLens(Lens lens) {
-			if (slots.contains(lens)) {
+ 			if (slots.contains(lens)) {
 				int index = slots.indexOf(lens);
 				slots.remove(lens); // remove old lens
 				slots.add(index, lens); // add new lens in same spot
