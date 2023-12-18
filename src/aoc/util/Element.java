@@ -31,6 +31,6 @@ public class Element<T> {
 	}
 
 	public String toString() {
-		return value.toString();
+		return value != null ? value.toString() : "";
 	}
 }

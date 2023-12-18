@@ -53,7 +53,7 @@ public class Grid<T> {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				sb.append(elements[i][j]);
+				sb.append(elements[i][j]).append('\t');
 			}
 			sb.append('\n');
 		}
