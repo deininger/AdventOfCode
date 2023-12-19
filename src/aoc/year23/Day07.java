@@ -222,7 +222,7 @@ public class Day07 extends PuzzleApp {
 	        	// System.out.println("Replacing Jokers with " + mostFrequentBestCard);
 	        
 	        	for (int i = 0; i < chars.length; i++) {
-	        		if (chars[i] == Card.JOKER.symbol()) {
+	        		if (chars[i] == Card.JOKER.symbol() && mostFrequentNonJokerCard != null) {
 	        			chars[i] = mostFrequentNonJokerCard.symbol();
 	        		}
 	        	}

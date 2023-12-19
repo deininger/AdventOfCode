@@ -46,7 +46,7 @@ public class Grid<T> {
 				subelements[i][j] = elements[row+i][col+j];
 			}
 		}
-		return new Grid(size, size, subelements);
+		return new Grid<T>(size, size, subelements);
 	}
 	
 	public String toString() {

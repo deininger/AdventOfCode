@@ -91,7 +91,7 @@ public class Day09 extends PuzzleApp {
 	}
 	
 	public void results() {
-		System.out.println("Total extrapolated values = " + extrapolatedReadings.stream().reduce(0, Integer::sum));
-		System.out.println("Backward extrapolated values = " + backwardsExtrapolatedReadings.stream().reduce(0, Integer::sum));
+		System.out.println("Total extrapolated values = " + extrapolatedReadings.stream().mapToInt(i -> i).sum());
+		System.out.println("Backward extrapolated values = " + backwardsExtrapolatedReadings.stream().mapToInt(i -> i).sum());
 	}
 }

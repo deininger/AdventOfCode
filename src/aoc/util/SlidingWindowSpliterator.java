@@ -1,7 +1,6 @@
 package aoc.util;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
@@ -39,7 +38,8 @@ public class SlidingWindowSpliterator<T> implements Spliterator<Stream<T>> {
             buffer.add(sourceIterator.next());
 
             if (buffer.size() == windowSize) {
-                action.accept(Arrays.stream((T[]) buffer.toArray(new Object[0])));
+                action.accept(buffer.stream()); 
+                // action.accept(Arrays.stream((T[]) buffer.toArray(new Object[0])));
                 buffer.poll();
                 return true;
             }
@@ -47,6 +47,7 @@ public class SlidingWindowSpliterator<T> implements Spliterator<Stream<T>> {
 
         return false;
     }
+
 
     @Override
     public Spliterator<Stream<T>> trySplit() {

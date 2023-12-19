@@ -29,12 +29,12 @@ public class Loc {
 		return y;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public Loc setX(int newX) {
+		return new Loc(newX, y);
 	}
 	
-	public void setY(int y) {
-		this.y = y;
+	public Loc setY(int newY) {
+		return new Loc(x, newY);
 	}
 	
 	public Loc step(Direction d) {
@@ -46,6 +46,29 @@ public class Loc {
 			case RIGHT: newLoc.x++; break;
 		}
 		return newLoc;
+	}
+
+	public Loc move(Direction d) {
+		Loc newLoc = new Loc(this);
+		switch (d) {
+			case UP: newLoc.y--; break;
+			case DOWN: newLoc.y++; break;
+			case LEFT: newLoc.x--; break;
+			case RIGHT: newLoc.x++; break;
+		}
+		return newLoc;
+	}
+
+	public Loc move(Direction d, int steps) {
+		Loc newLoc = new Loc(this);
+		switch (d) {
+			case UP: newLoc.y -= steps; break;
+			case DOWN: newLoc.y += steps; break;
+			case LEFT: newLoc.x -= steps; break;
+			case RIGHT: newLoc.x += steps; break;
+		}
+		return newLoc;
+
 	}
 
 	/**

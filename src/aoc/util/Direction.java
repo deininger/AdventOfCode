@@ -18,6 +18,16 @@ public enum Direction {
 		return BY_INTVALUE.get(intValue);
 	}
 
+	public static Direction withCode(String code) {
+		return switch(code) {
+			case "R": yield Direction.RIGHT;
+			case "L": yield Direction.LEFT;
+			case "U": yield Direction.UP;
+			case "D": yield Direction.DOWN;
+			default: throw new IllegalArgumentException("Unknown direction code: " + code);
+		};
+	}
+
 	private int intValue;
 
 	private Direction(int intValue) {

@@ -1,21 +1,15 @@
 package aoc.year23;
 
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import aoc.util.CharacterGrid;
-import aoc.util.Loc;
-import aoc.util.PuzzleApp;
 import aoc.util.Direction;
 import aoc.util.Grid;
+import aoc.util.Loc;
+import aoc.util.PuzzleApp;
 
 public class Day17 extends PuzzleApp {
 	private static final int MAX_LINEAR_PATH_LENGTH = 3;

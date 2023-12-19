@@ -13,6 +13,10 @@ public class Graph<T> {
 		this.root = root;
 	}
 	
+    public Node<T> root() {
+        return root;
+    }
+    
     public static <T> Optional<Node<T>> search(T value, Node<T> start) {
         Queue<Node<T>> queue = new ArrayDeque<>();
         queue.add(start);
