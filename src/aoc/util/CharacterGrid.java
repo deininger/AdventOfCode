@@ -36,12 +36,30 @@ public class CharacterGrid {
         return contains(loc.y(), loc.x());
     }
 
+ 
     public char at(int r, int c) {
         return rows.get(r).charAt(c);
     }
 
     public char at(Loc loc) {
         return at(loc.y(), loc.x());
+    }
+
+    public char wrapAt(Loc loc) {
+        int r = loc.y() % height();
+        if (r < 0) r += height();
+        int c = loc.x() % width();
+        if (c < 0) c += width();
+        return at(r, c);
+    }
+
+    public Loc locate(char x) {
+        for (int r = 0; r < rows.size(); r++) {
+            for (int c = 0; c < rows.get(0).length(); c++) {
+                if (at(r, c) == x) return new Loc(c, r);
+            }
+        }
+        return null;
     }
 
     public void set(int r, int c, char x) {
