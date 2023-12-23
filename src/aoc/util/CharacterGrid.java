@@ -1,6 +1,7 @@
 package aoc.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -76,7 +77,14 @@ public class CharacterGrid {
         char x = at(destR, destC);
         set(destR, destC, at(startR, startC));
         set(startR, startC, x);
+    }
 
+    public CharacterGrid overlayPath(Collection<Loc> path, char x) {
+        CharacterGrid newGrid = new CharacterGrid(this);
+
+        path.forEach(l -> newGrid.set(l, x));
+
+        return newGrid;
     }
 
     @Override
