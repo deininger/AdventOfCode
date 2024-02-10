@@ -2,7 +2,6 @@ package aoc.util;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -20,6 +19,10 @@ public class Node<T> {
         return value;
     }
 
+    public Map<Node<T>,Integer> neighbors() {
+        return neighbors;
+    }
+    
     public Set<Node<T>> getNeighbors() {
         return Collections.unmodifiableSet(neighbors.keySet());
     }
@@ -33,7 +36,7 @@ public class Node<T> {
      */
     public void connect(Node<T> destination, int weight) {
         if (this == destination) throw new IllegalArgumentException("Can't connect node to itself");
-        this.neighbors.put(destination, weight);
+        this.neighbors.putIfAbsent(destination, weight);
     }
 
     /*
@@ -41,15 +44,17 @@ public class Node<T> {
      */
     public void connect(Node<T> node) {
         if (this == node) throw new IllegalArgumentException("Can't connect node to itself");
-        this.neighbors.put(node, 0);
-        node.neighbors.put(this, 0);
+        this.neighbors.putIfAbsent(node, 0);
+        node.neighbors.putIfAbsent(this, 0);
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("N[").append(value).append("] --> ");
         neighbors.forEach((k,v) -> {
-            sb.append(k.getValue()).append("{").append(v).append("} ");
+            sb.append(k.getValue());
+            if (v > 0) sb.append("{").append(v).append("}");
+            sb.append(" ");
         });
         return sb.toString();
     }
