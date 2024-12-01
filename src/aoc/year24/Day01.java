@@ -5,6 +5,7 @@ import aoc.util.PuzzleApp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Day01 extends PuzzleApp {
     public static void main(String[] args) {
@@ -22,9 +23,9 @@ public class Day01 extends PuzzleApp {
     List<Integer> locationGroupTwo = new ArrayList<>();
 
     public void parseLine(String line) {
-        String[] x = line.split("\\s+");
-        locationGroupOne.add(Integer.parseInt(x[0]));
-        locationGroupTwo.add(Integer.parseInt(x[1]));
+        String[] locations = line.split("\\s+");
+        locationGroupOne.add(Integer.parseInt(locations[0]));
+        locationGroupTwo.add(Integer.parseInt(locations[1]));
     }
 
     int sum = 0;
@@ -33,22 +34,24 @@ public class Day01 extends PuzzleApp {
         Collections.sort(locationGroupOne);
         Collections.sort(locationGroupTwo);
 
-        for (int i = 0; i < locationGroupOne.size(); i++) {
-            sum += Math.abs(locationGroupOne.get(i) - locationGroupTwo.get(i));
-        }
+        sum = IntStream.range(0, locationGroupOne.size())
+                .map(i -> Math.abs(locationGroupOne.get(i) - locationGroupTwo.get(i)))
+                .sum();
     }
 
     public void results() {
-        System.out.println( "Day 1 part 1 result: " + sum);
+        System.out.println("Day 1 part 1 result: " + sum);
     }
 
     int sumPartTwo = 0;
 
     public void processPartTwo() {
-        sumPartTwo = locationGroupOne.stream().mapToInt(loc -> loc * Collections.frequency(locationGroupTwo, loc)).sum();
+        sumPartTwo = locationGroupOne.stream()
+                .mapToInt(loc -> loc * Collections.frequency(locationGroupTwo, loc))
+                .sum();
     }
 
     public void resultsPartTwo() {
-        System.out.println( "Day 1 part 2 result: " + sumPartTwo);
+        System.out.println("Day 1 part 2 result: " + sumPartTwo);
     }
 }
