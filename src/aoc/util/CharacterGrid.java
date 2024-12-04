@@ -37,13 +37,17 @@ public class CharacterGrid {
         return contains(loc.y(), loc.x());
     }
 
- 
     public char at(int r, int c) {
         return rows.get(r).charAt(c);
     }
 
     public char at(Loc loc) {
         return at(loc.y(), loc.x());
+    }
+
+    public char safeAt(int r, int c) {
+        if (contains(r, c)) return at(r, c);
+        else return '.';
     }
 
     public char wrapAt(Loc loc) {

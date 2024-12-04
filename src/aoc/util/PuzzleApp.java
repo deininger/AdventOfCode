@@ -26,17 +26,14 @@ public abstract class PuzzleApp implements Runnable {
 	}
 
 	public void parse() {
-		String line;
-		
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename()))) {
-			line = reader.readLine();
+			String line;
 
-			while (line != null) {
+			while ((line = reader.readLine())!= null) {
 				this.parseLine(line);
-				line = reader.readLine();
 			}
 		} catch (IOException e) {
-			System.err.println("Exception while reading data file: " + e.getLocalizedMessage());
+			System.err.println("Exception while reading data file: " + e.getMessage());
 		}
 	}
 
