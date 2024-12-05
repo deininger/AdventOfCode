@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import aoc.util.PuzzleApp;
 
 public class Day02 extends PuzzleApp {
-    private static Day02DataParser parser = new Day02DataParser();
+    private static final Day02DataParser parser = new Day02DataParser();
 
     public static void main(String[] args) {
         System.out.println("Day 2: Red-Nosed Reports");
@@ -23,7 +23,7 @@ public class Day02 extends PuzzleApp {
     }
 
     int safeCount = 0;
-    List<List<Integer>> reports = parser.parseData(filename());
+    final List<List<Integer>> reports = parser.parseData(filename());
 
     public void process() {
         for(List<Integer> report: reports) {
@@ -66,6 +66,7 @@ public class Day02 extends PuzzleApp {
 
             for (int r = 0; r < report.size(); r++) {
                 List<Integer> dampenedReport = new ArrayList<>(report);
+                //noinspection SuspiciousListRemoveInLoop
                 dampenedReport.remove(r);
 
                 deltas = IntStream.range(1, dampenedReport.size())

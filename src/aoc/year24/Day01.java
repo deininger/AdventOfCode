@@ -19,8 +19,8 @@ public class Day01 extends PuzzleApp {
         return "data/year24/day01-part1";
     }
 
-    List<Integer> locationGroupOne = new ArrayList<>();
-    List<Integer> locationGroupTwo = new ArrayList<>();
+    final List<Integer> locationGroupOne = new ArrayList<>();
+    final List<Integer> locationGroupTwo = new ArrayList<>();
 
     public void parseLine(String line) {
         String[] locations = line.split("\\s+");

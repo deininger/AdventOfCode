@@ -23,7 +23,7 @@ public class Day03 extends PuzzleApp {
         return "data/year24/day03";
     }
 
-    private static boolean PART_1 = false;
+    private static final boolean PART_1 = false;
 
     private long total = 0;
     private boolean enabled = true;
@@ -39,9 +39,9 @@ public class Day03 extends PuzzleApp {
                 case "mul":
                     if (enabled || PART_1) {
                         try {
-                            int x = Integer.parseInt(matcher.group(2));
-                            int y = Integer.parseInt(matcher.group(3));
-                            results.add(new ImmutablePair<>(x, y));
+                            int left = Integer.parseInt(matcher.group(2));
+                            int right = Integer.parseInt(matcher.group(3));
+                            results.add(new ImmutablePair<>(left, right));
                         } catch (NumberFormatException e) {
                             System.err.println("Invalid number format found: " + e.getMessage()
                                     + " with group count: " + matcher.groupCount()
@@ -61,9 +61,6 @@ public class Day03 extends PuzzleApp {
 
         // System.out.println(results);
         total += results.stream().mapToInt(pair -> pair.getLeft() * pair.getRight()).sum();
-    }
-
-    public void process() {
     }
 
     public void results() {

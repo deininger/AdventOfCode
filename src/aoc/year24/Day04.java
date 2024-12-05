@@ -15,7 +15,7 @@ public class Day04 extends PuzzleApp {
         return "data/year24/day04";
     }
 
-    private CharacterGrid data = new CharacterGrid();
+    private final CharacterGrid data = new CharacterGrid();
 
     @Override
     public void parseLine(String line) {

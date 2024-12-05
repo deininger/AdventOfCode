@@ -1,8 +1,5 @@
 package aoc.year24;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
