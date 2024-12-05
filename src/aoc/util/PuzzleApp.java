@@ -17,7 +17,7 @@ public abstract class PuzzleApp implements Runnable {
 		processPartTwo();
 		resultsPartTwo();
 		long timerEnd = System.currentTimeMillis();
-		System.out.println("Time: " + ((timerEnd - timerStart) / 1000) + " seconds");
+		System.out.println("Time: " + (((timerEnd - timerStart) / 100))/10.0 + " seconds");
 	}
 	
 	public abstract String filename();

@@ -25,16 +25,16 @@ public class Day05 extends PuzzleApp {
 
     @Override
     public void parseLine(String line) {
-        if (line.isEmpty()) {
-            return;
-        } else if (line.contains("|")) {
-            String[] parts = line.split("\\|");
-            pageOrderingRules.add(Pair.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
-        } else {
-            updates.add(Arrays.stream(line.split(","))
-                    .map(String::trim)  // Remove leading/trailing whitespace
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList()));
+        if (!line.isEmpty()) {
+            if (line.contains("|")) {
+                String[] parts = line.split("\\|");
+                pageOrderingRules.add(Pair.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
+            } else {
+                updates.add(Arrays.stream(line.split(","))
+                        .map(String::trim)  // Remove leading/trailing whitespace
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList()));
+            }
         }
     }
 
@@ -51,13 +51,14 @@ public class Day05 extends PuzzleApp {
             for (int j = 1; j < update.size(); j++) {
                 Pair<Integer, Integer> opposite = Pair.of(update.get(j), update.get(j - 1));
                 if (pageOrderingRules.contains(opposite)) {
+                    // System.out.println("Update " + update + " failed due to broken rule: " + opposite);
                     correctOrder = false;
-                    System.out.println("Update " + update + " failed due to broken rule: " + opposite);
+                    break;
                 }
             }
             if (correctOrder) {
-                correctlyOrdered.add(update);
                 // System.out.println("Update " + update + " passed!");
+                correctlyOrdered.add(update);
             } else {
                 incorrectlyOrdered.add(update);
             }
@@ -80,15 +81,15 @@ public class Day05 extends PuzzleApp {
             for (int j = 1; j < update.size(); j++) {
                 Pair<Integer, Integer> opposite = Pair.of(update.get(j), update.get(j - 1));
                 if (pageOrderingRules.contains(opposite)) {
-                    System.out.println("Swapping " + Pair.of(update.get(j-1), update.get(j)) + " -> " + opposite );
+                    // System.out.println("Swapping " + Pair.of(update.get(j-1), update.get(j)) + " -> " + opposite );
                     // Swap the rule-breaking pair:
                     update.set(j - 1, opposite.getLeft());
                     update.set(j, opposite.getRight());
-                    j = 0; // re-check the whole thing?
+                    j = Math.max(j - 2, 0); // back-up and re-check previous pair
                 }
             }
 
-            System.out.println("Update " + update + " reordered!");
+            // System.out.println("Update " + update + " reordered!");
         }
     }
 
