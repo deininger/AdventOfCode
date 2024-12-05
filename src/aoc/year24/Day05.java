@@ -3,9 +3,7 @@ package aoc.year24;
 import aoc.util.PuzzleApp;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Day05 extends PuzzleApp {
@@ -20,7 +18,7 @@ public class Day05 extends PuzzleApp {
         return "data/year24/day05";
     }
 
-    private final List<Pair<Integer,Integer>> pageOrderingRules = new ArrayList<>();
+    private final Set<Pair<Integer,Integer>> pageOrderingRules = new HashSet<>();
     private final List<List<Integer>> updates = new ArrayList<>();
 
     @Override
