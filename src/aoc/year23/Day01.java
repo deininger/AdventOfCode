@@ -1,12 +1,11 @@
 package aoc.year23;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import aoc.util.PuzzleApp;
 
 public class Day01 extends PuzzleApp {
-	public static final void main(String[] args) {
+	public static void main(String[] args) {
 		System.out.println("December 01: Trebuchet?!");
 		PuzzleApp app = new Day01();
 		app.run();
@@ -23,9 +22,9 @@ public class Day01 extends PuzzleApp {
 		List<Integer> intList = line.chars()
 					.filter(c -> c >= '0' && c <= '9')
 					.map(i -> i - '0')
-					.boxed().collect(Collectors.toList());
+					.boxed().toList();
 		
-		if (intList.size() > 0) {
+		if (!intList.isEmpty()) {
 			sum += (intList.get(0) * 10 + intList.get(intList.size()-1));
 		}
 	}

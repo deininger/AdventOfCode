@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day06 extends PuzzleApp {
     public static final char START = '^';
@@ -54,34 +55,34 @@ public class Day06 extends PuzzleApp {
         System.out.println("Day 6 part 1 result: " + path.size());
     }
 
-    private int loopCount = 0;
+    private final AtomicInteger loopCount = new AtomicInteger(0);
 
     public void processPartTwo() {
         // Try placing an obstruction at each point of the path:
-        for (Loc obstruction: path) {
-            if (map.at(obstruction) != START) { // Can't place an obstruction at the starting position
-                Set<Pair<Loc,Direction>> visited = new HashSet<>();
-                Loc pos = map.locate(START);
-                Direction facing = Direction.UP;
+        path.remove(map.locate(START)); // Can't place an obstruction at the starting position
 
-                while (map.contains(pos) && !visited.contains(Pair.of(pos,facing))) {
-                    visited.add(Pair.of(pos,facing));
-                    Loc next = pos.step(facing);
+        path.parallelStream().forEach(obstruction -> {
+            Set<Pair<Loc, Direction>> visited = new HashSet<>();
+            Loc pos = map.locate(START);
+            Direction facing = Direction.UP;
 
-                    while (map.contains(next) && (map.at(next) == OBSTACLE || next.equals(obstruction))) {
-                        facing = facing.turnRight();
-                        next = pos.step(facing);
-                    }
-                    pos = next;
+            while (map.contains(pos) && !visited.contains(Pair.of(pos, facing))) {
+                visited.add(Pair.of(pos, facing));
+                Loc next = pos.step(facing);
+
+                while (map.contains(next) && (map.at(next) == OBSTACLE || next.equals(obstruction))) {
+                    facing = facing.turnRight();
+                    next = pos.step(facing);
                 }
-
-                if (map.contains(pos)) {
-                    // We didn't exit the map so we must be in a loop
-                    // System.out.println("Loop detected:\n" + obstructedMap.overlayPath(visited.stream().map(Pair::getLeft).toList(), 'X'));
-                    loopCount++;
-                }
+                pos = next;
             }
-        }
+
+            if (map.contains(pos)) {
+                // We didn't exit the map so we must be in a loop
+                // System.out.println("Loop detected:\n" + obstructedMap.overlayPath(visited.stream().map(Pair::getLeft).toList(), 'X'));
+                loopCount.incrementAndGet();
+            }
+        });
     }
 
     public void resultsPartTwo() {
