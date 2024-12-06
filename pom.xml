@@ -8,21 +8,20 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>31.1-jre</version>
+			<version>33.3.1-jre</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.wso2.orbit.org.apache.commons</groupId>
+			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0.wso2v1</version>
-		</dependency>
-		
-		<dependency>
-    		<groupId>org.congocc</groupId>
-    		<artifactId>org.congocc.parser.generator</artifactId>
-    		<version>2.0.0-RC5</version>
+			<version>3.17.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.36</version>
+		</dependency>
 	</dependencies>
 
 	<build>
