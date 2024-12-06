@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Day06 extends PuzzleApp {
+    public static final char START = '^';
+    public static final char OBSTACLE = '#';
+
     public static void main(String[] args) {
         System.out.println("Day 6: Guard Gallivant");
         PuzzleApp app = new aoc.year24.Day06();
@@ -31,13 +34,13 @@ public class Day06 extends PuzzleApp {
     public void process() {
         // System.out.println(map);
 
-        Loc pos = map.locate('^');
+        Loc pos = map.locate(START);
         Direction facing = Direction.UP;
 
         while (map.contains(pos)) {
             path.add(pos);
             Loc next = pos.step(facing);
-            while (map.contains(next) && map.at(next) == '#') { // Turn until we can move forward
+            while (map.contains(next) && map.at(next) == OBSTACLE) { // Turn until we can move forward
                 facing = facing.turnRight();
                 next = pos.step(facing);
             }
@@ -56,16 +59,16 @@ public class Day06 extends PuzzleApp {
     public void processPartTwo() {
         // Try placing an obstruction at each point of the path:
         for (Loc obstruction: path) {
-            if (map.at(obstruction) != '^') { // Can't place an obstruction at the starting position
+            if (map.at(obstruction) != START) { // Can't place an obstruction at the starting position
                 Set<Pair<Loc,Direction>> visited = new HashSet<>();
-                Loc pos = map.locate('^');
+                Loc pos = map.locate(START);
                 Direction facing = Direction.UP;
 
                 while (map.contains(pos) && !visited.contains(Pair.of(pos,facing))) {
                     visited.add(Pair.of(pos,facing));
                     Loc next = pos.step(facing);
 
-                    while (map.contains(next) && (map.at(next) == '#' || next.equals(obstruction))) {
+                    while (map.contains(next) && (map.at(next) == OBSTACLE || next.equals(obstruction))) {
                         facing = facing.turnRight();
                         next = pos.step(facing);
                     }
