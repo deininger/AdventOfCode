@@ -30,19 +30,27 @@ public class Day07 extends PuzzleApp {
         equations.add(Pair.of(testValue,numbers));
     }
 
-    public LongStream evaluate(List<Long> numbers, boolean concatenate) {
+    public LongStream evaluate(List<Long> numbers, Long maximum, boolean concatenate) {
         if (numbers.isEmpty()) {
             return LongStream.empty();
         } else if (numbers.size() == 1) {
             return LongStream.of(numbers.getFirst());
         } else {
-            LongStream a = evaluate(numbers.subList(0, numbers.size()-1), concatenate).map(x -> numbers.getLast() + x);
-            LongStream m = evaluate(numbers.subList(0, numbers.size()-1), concatenate).map(x -> numbers.getLast() * x);
+            LongStream a = evaluate(numbers.subList(0, numbers.size()-1), maximum, concatenate)
+                    .map(x -> numbers.getLast() + x)
+                    .filter(x -> x <= maximum);
+
+            LongStream m = evaluate(numbers.subList(0, numbers.size()-1), maximum, concatenate)
+                    .map(x -> numbers.getLast() * x)
+                    .filter(x -> x <= maximum);
+
             LongStream result = LongStream.concat(a,m);
 
             if (concatenate) {
-                LongStream c = evaluate(numbers.subList(0, numbers.size()-1), concatenate)
-                        .map(x -> Long.parseLong(Long.toString(x) + Long.toString(numbers.getLast())));
+                LongStream c = evaluate(numbers.subList(0, numbers.size()-1), maximum, concatenate)
+                        .map(x -> Long.parseLong(Long.toString(x) + Long.toString(numbers.getLast())))
+                        .filter(x -> x <= maximum);
+
                 result = LongStream.concat(result,c);
             }
 
@@ -56,7 +64,9 @@ public class Day07 extends PuzzleApp {
         // System.out.println(equations);
 
         equations.parallelStream().forEach(equation -> {
-            boolean result = evaluate(equation.getRight(),false).anyMatch(x -> x == equation.getLeft());
+            boolean result = evaluate(equation.getRight(), equation.getLeft(), false)
+                    .anyMatch(x -> x == equation.getLeft());
+
             if (result) {
                 totalCalibrationResult += equation.getLeft();
             }
@@ -71,7 +81,9 @@ public class Day07 extends PuzzleApp {
 
     public void processPartTwo() {
         equations.parallelStream().forEach(equation -> {
-            boolean result = evaluate(equation.getRight(), true).anyMatch(x -> x == equation.getLeft());
+            boolean result = evaluate(equation.getRight(), equation.getLeft(), true)
+                    .anyMatch(x -> x == equation.getLeft());
+
             if (result) {
                 totalCalibrationResultPartTwo += equation.getLeft();
             }
@@ -81,4 +93,11 @@ public class Day07 extends PuzzleApp {
     public void resultsPartTwo() {
         System.out.println("Day 7 part 2 result: " + totalCalibrationResultPartTwo);
     }
+
+    /*
+Day 7: Bridge Repair
+Day 7 part 1 result: 1289579105366
+Day 7 part 2 result: 92148721834692
+Time: 16.7 seconds
+     */
 }
