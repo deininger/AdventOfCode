@@ -3,8 +3,7 @@ package aoc.year24;
 import aoc.util.PuzzleApp;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.LongStream;
 
 public class Day07 extends PuzzleApp {
@@ -28,6 +27,37 @@ public class Day07 extends PuzzleApp {
             numbers.add(Long.parseLong(parts[i]));
         }
         equations.add(Pair.of(testValue,numbers));
+    }
+
+    public boolean evaluate(Long testValue, Deque<Long> queue, boolean concatenate) {
+        if (queue.isEmpty()) {
+            return testValue == 0;
+        } else if (queue.size() == 1) {
+            return testValue.equals(queue.pop());
+        } else if (queue.peek() > testValue) {
+            return false;
+        } else {
+            Long a = queue.pop();
+            Long b = queue.pop();
+
+            Deque<Long> addition = new ArrayDeque<>(queue);
+            addition.push(a + b);
+            boolean result = evaluate(testValue, addition, concatenate);
+            if (result) return result;
+
+            Deque<Long> multiplication = new ArrayDeque<>(queue);
+            multiplication.push(a * b);
+            result = evaluate(testValue, multiplication, concatenate);
+            if (result) return result;
+
+            if (concatenate) {
+                Deque<Long> concatenation = new ArrayDeque<>(queue);
+                concatenation.push(Long.parseLong(Long.toString(a) + Long.toString(b)));
+                return evaluate(testValue, concatenation, concatenate);
+            }
+
+            return false;
+        }
     }
 
     public LongStream evaluate(List<Long> numbers, Long maximum, boolean concatenate) {
@@ -64,8 +94,15 @@ public class Day07 extends PuzzleApp {
         // System.out.println(equations);
 
         equations.parallelStream().forEach(equation -> {
-            boolean result = evaluate(equation.getRight(), equation.getLeft(), false)
-                    .anyMatch(x -> x == equation.getLeft());
+            Deque<Long> queue = new ArrayDeque<>(equation.getRight());
+            boolean result = evaluate(equation.getLeft(), queue,false);
+
+//            boolean oldResult = evaluate(equation.getRight(), equation.getLeft(), false)
+//                    .anyMatch(x -> x == equation.getLeft());
+//
+//            if (result != oldResult) {
+//                System.out.println("Discrepancy: " + equation);
+//            }
 
             if (result) {
                 totalCalibrationResult += equation.getLeft();
@@ -81,8 +118,8 @@ public class Day07 extends PuzzleApp {
 
     public void processPartTwo() {
         equations.parallelStream().forEach(equation -> {
-            boolean result = evaluate(equation.getRight(), equation.getLeft(), true)
-                    .anyMatch(x -> x == equation.getLeft());
+            Deque<Long> queue = new ArrayDeque<>(equation.getRight());
+            boolean result = evaluate(equation.getLeft(), queue,true);
 
             if (result) {
                 totalCalibrationResultPartTwo += equation.getLeft();
@@ -93,4 +130,9 @@ public class Day07 extends PuzzleApp {
     public void resultsPartTwo() {
         System.out.println("Day 7 part 2 result: " + totalCalibrationResultPartTwo);
     }
+
+    //Day 7: Bridge Repair
+    //Day 7 part 1 result: 1289579105366
+    //Day 7 part 2 result: 92148721834692
+    //Time: 13.7 seconds
 }
