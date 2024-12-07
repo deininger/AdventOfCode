@@ -93,11 +93,4 @@ public class Day07 extends PuzzleApp {
     public void resultsPartTwo() {
         System.out.println("Day 7 part 2 result: " + totalCalibrationResultPartTwo);
     }
-
-    /*
-Day 7: Bridge Repair
-Day 7 part 1 result: 1289579105366
-Day 7 part 2 result: 92148721834692
-Time: 16.7 seconds
-     */
 }
