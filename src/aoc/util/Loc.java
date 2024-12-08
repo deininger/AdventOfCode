@@ -84,9 +84,11 @@ public class Loc {
 	}
 
 	public Loc difference(Loc l) {
-		return new Loc(l.x() - this.x(), l.y() - this.y());
+		return new Loc(this.x() - l.x(), this.y() - l.y());
 	}
-	
+
+	public Loc sum(Loc l) { return new Loc(this.x() + l.x(), this.y() + l.y()); }
+
 	public Stream<Loc> adjacent() {
 		return Stream.of(new Loc(x, y + 1), new Loc(x + 1, y), new Loc(x - 1, y), new Loc(x, y - 1));
 	}
@@ -96,7 +98,7 @@ public class Loc {
 	 * using the manhattan distance.
 	 */
 	public Stream<Loc> adjacent(int distance) {
-		List<Loc> results = new ArrayList<Loc>();
+		List<Loc> results = new ArrayList<>();
 		
 		for(int i = 0; i < distance; i++) {
 			results.add(new Loc(x+i, y-distance+i));
@@ -141,18 +143,13 @@ public class Loc {
 	}
 	
 	public Loc adjacentLoc(String direction) {
-		switch (direction) {
-		case "N", "U":
-			return new Loc(x, y - 1);
-		case "S", "D":
-			return new Loc(x, y + 1);
-		case "W", "L":
-			return new Loc(x - 1, y);
-		case "E", "R":
-			return new Loc(x + 1, y);
-		default:
-			throw new IllegalArgumentException("Unsupported direction '" + direction + "'");
-		}
+        return switch (direction) {
+            case "N", "U" -> new Loc(x, y - 1);
+            case "S", "D" -> new Loc(x, y + 1);
+            case "W", "L" -> new Loc(x - 1, y);
+            case "E", "R" -> new Loc(x + 1, y);
+            default -> throw new IllegalArgumentException("Unsupported direction '" + direction + "'");
+        };
 	}
 
 	/**
