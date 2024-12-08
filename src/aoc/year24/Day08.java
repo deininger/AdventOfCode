@@ -87,12 +87,6 @@ public class Day08 extends PuzzleApp {
                         partTwoAntinodes.add(l);
                         l = l.sum(adjustedDelta);
                     }
-                    adjustedDelta = new Loc(-adjustedDelta.x(),-adjustedDelta.y());
-                    l = new Loc(node);
-                    while (map.contains(l)) {
-                        partTwoAntinodes.add(l);
-                        l = l.sum(adjustedDelta);
-                    }
                 }
             }
         }
