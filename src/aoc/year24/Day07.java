@@ -97,13 +97,6 @@ public class Day07 extends PuzzleApp {
             Deque<Long> queue = new ArrayDeque<>(equation.getRight());
             boolean result = evaluate(equation.getLeft(), queue,false);
 
-//            boolean oldResult = evaluate(equation.getRight(), equation.getLeft(), false)
-//                    .anyMatch(x -> x == equation.getLeft());
-//
-//            if (result != oldResult) {
-//                System.out.println("Discrepancy: " + equation);
-//            }
-
             if (result) {
                 totalCalibrationResult += equation.getLeft();
             }
@@ -130,9 +123,4 @@ public class Day07 extends PuzzleApp {
     public void resultsPartTwo() {
         System.out.println("Day 7 part 2 result: " + totalCalibrationResultPartTwo);
     }
-
-    //Day 7: Bridge Repair
-    //Day 7 part 1 result: 1289579105366
-    //Day 7 part 2 result: 92148721834692
-    //Time: 13.7 seconds
 }

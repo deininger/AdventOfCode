@@ -47,7 +47,6 @@ public class Day06 extends PuzzleApp {
             }
             pos = next;
         }
-
     }
 
     public void results() {
