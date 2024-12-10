@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class Day09 extends PuzzleApp {
     public static void main(String[] args) {
-        System.out.println("Day 8: Resonant Collinearity");
+        System.out.println("Day 9: Disk Fragmenter");
         PuzzleApp app = new aoc.year24.Day09();
         app.run();
     }

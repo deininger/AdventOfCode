@@ -1,20 +1,15 @@
 package aoc.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CharacterGrid {
-    private List<String> rows = new ArrayList<>();
+    private final List<String> rows = new ArrayList<>();
 
     public CharacterGrid() {
     }
 
     public CharacterGrid(CharacterGrid other) {
-        for (int i = 0; i < other.rows.size(); i++) {
-            this.rows.add(other.rows.get(i));
-        }
+        this.rows.addAll(other.rows);
     }
 
     public void addRow(String row) {
@@ -26,7 +21,7 @@ public class CharacterGrid {
     }
 
     public int width() {
-        return rows.get(0).length();
+        return rows.getFirst().length();
     }
 
     public boolean contains(int r, int c) {
@@ -60,11 +55,21 @@ public class CharacterGrid {
 
     public Loc locate(char x) {
         for (int r = 0; r < rows.size(); r++) {
-            for (int c = 0; c < rows.get(0).length(); c++) {
+            for (int c = 0; c < rows.getFirst().length(); c++) {
                 if (at(r, c) == x) return new Loc(c, r);
             }
         }
         return null;
+    }
+
+    public Set<Loc> locateAll(char x) {
+        Set<Loc> matches = new HashSet<>();
+        for (int r = 0; r < rows.size(); r++) {
+            for (int c = 0; c < rows.getFirst().length(); c++) {
+                if (at(r, c) == x) matches.add(new Loc(c, r));
+            }
+        }
+        return matches;
     }
 
     public void set(int r, int c, char x) {
