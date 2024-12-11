@@ -52,7 +52,6 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
     public void process() {
         // System.out.println(stones);
         for (int i = 0; i < 25; i++) {
-            System.out.println(i);
             stones = blink(stones);
             // System.out.println(stones);
         }
@@ -65,7 +64,7 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
 
     public void processPartTwo() {
         for (int i = 25; i < 75; i++) {
-            System.out.println(i);
+            // System.out.println(i);
             stones = blink(stones);
         }
     }
@@ -74,7 +73,4 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
         long result = stones.values().stream().mapToLong(Long::longValue).sum();
         System.out.println("Day 11 part 2 result: " + result);
     }
-
-    // 8298105970 is too low
-    // 65601038650482 is too low
 }
