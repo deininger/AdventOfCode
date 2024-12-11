@@ -71,6 +71,6 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
 
     public void resultsPartTwo() {
         long result = stones.values().stream().mapToLong(Long::longValue).sum();
-        System.out.println("Day 11 part 2 result: " + result);
+        System.out.println("Day 11 part 2 result: " + result + " (" + stones.size() + " unique values)");
     }
 }
