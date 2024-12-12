@@ -2,6 +2,7 @@ package aoc.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public enum Direction {
 	RIGHT(0), DOWN(1), LEFT(2), UP(3);
@@ -12,6 +13,10 @@ public enum Direction {
 		for (Direction d : values()) {
 			BY_INTVALUE.put(d.intValue(), d);
 		}
+	}
+
+	public static Stream<Direction> stream() {
+		return Stream.of(values());
 	}
 
 	public static Direction withIntValue(int intValue) {
@@ -28,9 +33,9 @@ public enum Direction {
 		};
 	}
 
-	private int intValue;
+	private final int intValue;
 
-	private Direction(int intValue) {
+	Direction(int intValue) {
 		this.intValue = intValue;
 	}
 
