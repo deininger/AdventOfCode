@@ -64,7 +64,7 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
     }
 
     public void processPartTwo() {
-        for (int i = 25; i < 750; i++) {
+        for (int i = 25; i < 75; i++) {
             // System.out.println(i);
             stones = blink(stones);
         }
@@ -73,5 +73,16 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
     public void resultsPartTwo() {
         BigInteger result = stones.values().stream().reduce(BigInteger.ZERO, BigInteger::add);
         System.out.println("Day 11 part 2 result: " + result + " (" + stones.size() + " unique values)");
+
+        extraCredit();
+    }
+
+    public void extraCredit() {
+        for (int i = 75; i < 750; i++) {
+            stones = blink(stones);
+        }
+
+        BigInteger result = stones.values().stream().reduce(BigInteger.ZERO, BigInteger::add);
+        System.out.println("Day 11 extra credit (750 iterations) result: " + result + " (" + stones.size() + " unique values)");
     }
 }
