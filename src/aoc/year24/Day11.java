@@ -2,7 +2,9 @@ package aoc.year24;
 
 import aoc.util.PuzzleApp;
 
+import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
     public static void main(String[] args) {
@@ -11,40 +13,39 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
         app.run();
     }
 
+    private static final BigInteger MULTIPLIER = new BigInteger("2024");
+
     public String filename() {
         return "data/year24/day11";
     }
 
-    private Map<Long,Long> stones = new HashMap<>();
+    private Map<BigInteger,BigInteger> stones = new HashMap<>();
 
     public void parseLine(String line) {
-        Arrays.stream(line.split("\\s+")).map(Long::parseLong).forEach(stone -> stones.merge(stone, 1L, Long::sum));
+        Arrays.stream(line.split("\\s+")).map(Long::parseLong).map(BigInteger::valueOf).forEach(stone -> stones.merge(stone, BigInteger.ONE, BigInteger::add));
     }
 
-    private Map<Long,Long> blink(Map<Long,Long> stones) {
-        Map<Long,Long> newStones = new HashMap<>();
-        Iterator<Map.Entry<Long,Long>> iterator = stones.entrySet().iterator();
+    private Map<BigInteger,BigInteger> blink(Map<BigInteger,BigInteger> stones) {
+        Map<BigInteger,BigInteger> newStones = new ConcurrentHashMap<>();
 
-        while (iterator.hasNext()) {
-            Map.Entry<Long,Long> entry = iterator.next();
-            Long stone = entry.getKey();
-            Long count = entry.getValue();
-            iterator.remove();
+        stones.entrySet().parallelStream().forEach(entry -> {
+            BigInteger stone = entry.getKey();
+            BigInteger count = entry.getValue();
 
-            if (stone == 0L) {
-                newStones.merge(1L, count, Long::sum);
+            if (stone.equals(BigInteger.ZERO)) {
+                newStones.merge(BigInteger.ONE, count, BigInteger::add);
             } else {
-                String stringValue = String.valueOf(stone);
+                String stringValue = stone.toString();
                 if (stringValue.length() % 2 == 0) {
-                    Long firstStone = Long.parseLong(stringValue.substring(0, stringValue.length() / 2));
-                    Long secondStone = Long.parseLong(stringValue.substring(stringValue.length() / 2));
-                    newStones.merge(firstStone, count, Long::sum);
-                    newStones.merge(secondStone, count, Long::sum);
+                    BigInteger firstStone = BigInteger.valueOf(Long.parseLong(stringValue.substring(0, stringValue.length() / 2)));
+                    BigInteger secondStone = BigInteger.valueOf(Long.parseLong(stringValue.substring(stringValue.length() / 2)));
+                    newStones.merge(firstStone, count, BigInteger::add);
+                    newStones.merge(secondStone, count, BigInteger::add);
                 } else {
-                    newStones.merge(stone * 2024, count, Long::sum);
+                    newStones.merge(stone.multiply(MULTIPLIER), count, BigInteger::add);
                 }
             }
-        }
+        });
 
         return newStones;
     }
@@ -58,19 +59,19 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
     }
 // 2097446912 14168 4048 2 0 2 4 40 48 2024 40 48 80 96 2 8 6 7 6 0 3 2
     public void results() {
-        long result = stones.values().stream().mapToLong(Long::longValue).sum();
+        BigInteger result = stones.values().stream().reduce(BigInteger.ZERO, BigInteger::add);
         System.out.println("Day 11 part 1 result: " + result);
     }
 
     public void processPartTwo() {
-        for (int i = 25; i < 75; i++) {
+        for (int i = 25; i < 750; i++) {
             // System.out.println(i);
             stones = blink(stones);
         }
     }
 
     public void resultsPartTwo() {
-        long result = stones.values().stream().mapToLong(Long::longValue).sum();
+        BigInteger result = stones.values().stream().reduce(BigInteger.ZERO, BigInteger::add);
         System.out.println("Day 11 part 2 result: " + result + " (" + stones.size() + " unique values)");
     }
 }
