@@ -54,7 +54,7 @@ public class Day12 extends PuzzleApp {
 
         System.out.println("Number of regions: " + regions.size());
 
-        regions.forEach(region -> System.out.println("Region '" + region.symbol() + "' has area " + region.area() + " and perimiter " + region.perimiter() + " and side count " + region.sides()));
+        // regions.forEach(region -> System.out.println("Region '" + region.symbol() + "' has area " + region.area() + " and perimiter " + region.perimiter() + " and side count " + region.sides()));
 
         totalPrice = regions.stream().mapToInt(region -> region.area() * region.perimiter()).sum();
         totalSideCount = regions.stream().mapToInt(region -> region.area() * region.sides()).sum();
@@ -93,7 +93,7 @@ public class Day12 extends PuzzleApp {
         public void grow(CharacterGrid map, Loc loc) {
             if (hasLocation(loc) || !map.contains(loc) || map.at(loc) != symbol) return;
             addLocation(loc);
-            map.set(loc, '.');
+            map.set(loc, '.'); // mark this location as "used" in the map
             loc.adjacent().forEach(l -> grow(map, l));
         }
 
@@ -115,20 +115,11 @@ public class Day12 extends PuzzleApp {
             sides.put(Direction.LEFT,new ArrayList<>());
             sides.put(Direction.RIGHT,new ArrayList<>());
 
-            for (Loc l: locations) {
-                if (!hasLocation(l.step(Direction.UP))) {
-                    sides.get(Direction.UP).add(l);
-                }
-                if (!hasLocation(l.step(Direction.RIGHT))) {
-                    sides.get(Direction.RIGHT).add(l);
-                }
-                if (!hasLocation(l.step(Direction.DOWN))) {
-                    sides.get(Direction.DOWN).add(l);
-                }
-                if (!hasLocation(l.step(Direction.LEFT))) {
-                    sides.get(Direction.LEFT).add(l);
-                }
-            }
+            // grab every location that borders a not-in-our-region location
+            // make sure to check all four directions! Keep them organized by direction,
+            // to make it easy to find adjacent ones which form a single side
+
+            locations.forEach(l -> Direction.stream().filter(d -> !hasLocation(l.step(d))).forEach(d -> sides.get(d).add(l)));
 
             AtomicInteger sideCounter = new AtomicInteger();
 
@@ -136,20 +127,20 @@ public class Day12 extends PuzzleApp {
             Direction.stream().forEach(d -> {
                 List<Loc> locs = sides.get(d);
 
-                while (!locs.isEmpty()) {
+                while (!locs.isEmpty()) { // Pull out adjacent locations until we've counted them all
                     Loc l = locs.getFirst();
                     locs.remove(l);
                     Loc l2 = l.step(d.turnLeft());
-                    while (locs.contains(l2)) {
+                    while (locs.contains(l2)) { // step in one direction...
                         locs.remove(l2);
                         l2 = l2.step(d.turnLeft());
                     }
-                    l2 = l.step(d.turnRight());
-                    while (locs.contains(l2)) {
-                        locs.remove(l2);
-                        l2 = l2.step(d.turnRight());
+                    Loc l3 = l.step(d.turnRight());
+                    while (locs.contains(l3)) { // step in the other direction...
+                        locs.remove(l3);
+                        l3 = l3.step(d.turnRight());
                     }
-                    sideCounter.getAndIncrement();
+                    sideCounter.getAndIncrement(); // count the whole group as 1 side
                 }
             });
 
@@ -182,11 +173,11 @@ public class Day12 extends PuzzleApp {
                     // lf we can turn left, do so, and take a step forward
                     d = d.turnLeft();
                     l = l.step(d);
-                    System.out.println("  turning left to face " + d);
+                    // System.out.println("  turning left to face " + d);
                 } else {
                     // we can't turn left, we can't keep going forward, turn right
                     d = d.turnRight();
-                    System.out.println("  turning right to face " + d);
+                    // System.out.println("  turning right to face " + d);
                 }
 
                 if (l.equals(start) && d.equals(Direction.RIGHT)) break;
