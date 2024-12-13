@@ -155,7 +155,6 @@ public class Day13 extends PuzzleApp {
                 long buttonAright = (machine.prize().getRight() - machine.buttonB().getRight() * buttonB) / (machine.buttonA().getRight());
                 if (buttonAleft == buttonAright) {
                     Pair<Long, Long> solution = Pair.of(buttonAleft, buttonB);
-                    checkSolution(machine, solution);
                     long tokens = tokens(solution);
                     System.out.println("Solved machine " + machine.machineNumber() + ": " + solution + " -> " + tokens);
                     return tokens;
@@ -168,21 +167,40 @@ public class Day13 extends PuzzleApp {
         return 0;
     }
 
-    private void checkSolution(ClawMachine machine, Pair<Long,Long> solution) {
-        long computedPrizeX = machine.buttonA().getLeft() * solution.getLeft() + machine.buttonB().getLeft() * solution.getRight();
-        long computedPrizeY = machine.buttonA().getRight() * solution.getLeft() + machine.buttonB().getRight() * solution.getRight();
+    /*
+     * This is the way! Solving a system of equations:
+     *  P = prize, A = button A, B = button B
+     *  CA = count of button A presses, CB = count of button B presses
+     *
+     *  Px = CA * Ax + CB * Bx
+     *  Py = CA * Ay + CB * By
+     *
+     *  solve: CA = ( Px * By - Py * Bx ) / ( Ax * By - Ay * Bx )
+     *         CB = ( Px - Ax * CA ) / ( Bx )
+     */
+    private long algebraicSolution(ClawMachine machine) {
+        double buttonApresses = 1.0d * ( machine.prize().getLeft() * machine.buttonB().getRight()
+                - machine.prize().getRight() * machine.buttonB().getLeft() )
+                / ( machine.buttonA().getLeft() * machine.buttonB().getRight()
+                - machine.buttonA().getRight() * machine.buttonB().getLeft() );
 
-        if (Pair.of(computedPrizeX, computedPrizeY).equals(machine.prize())) {
-            System.out.println("Solution check is good!");
-        } else {
-            System.out.println("Solution check is bad: " + Pair.of(computedPrizeX, computedPrizeY) + " != " + machine.prize());
+        double buttonBpresses = (machine.prize().getLeft() - machine.buttonA().getLeft() * buttonApresses )
+                / machine.buttonB().getLeft();
+
+        // This is only an answer if both counts are positive Integers:
+        if (buttonApresses > 0 && buttonBpresses > 0
+                && buttonApresses == Math.floor(buttonApresses)
+                && buttonBpresses == Math.floor(buttonBpresses)) {
+            return tokens(Pair.of((long)buttonApresses, (long)buttonBpresses));
         }
+
+        return 0;
     }
 
     private long result;
 
     public void process() {
-        result = machines.stream().mapToLong(this::smartSolve).sum();
+        result = machines.stream().mapToLong(this::algebraicSolution).sum();
     }
 
     public void results() {
@@ -194,10 +212,10 @@ public class Day13 extends PuzzleApp {
     private static final long OFFSET = 10000000000000L;
 
     public void processPartTwo() {
-        resultPartTwo = machines.stream()
+        resultPartTwo = machines.parallelStream()
                 .peek(machine -> machine.setPrize(Pair.of(machine.prize().getLeft() + OFFSET,
                         machine.prize().getRight() + OFFSET)))
-                .mapToLong(this::smartSolve)
+                .mapToLong(this::algebraicSolution)
                 .sum();
     }
 

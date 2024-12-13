@@ -78,11 +78,13 @@ public class Day11 extends PuzzleApp { // Day 11: Plutonian Pebbles
     }
 
     public void extraCredit() {
-        for (int i = 75; i < 750; i++) {
+        int BLINK_COUNT = 7500;
+
+        for (int i = 75; i < BLINK_COUNT; i++) {
             stones = blink(stones);
         }
 
         BigInteger result = stones.values().stream().reduce(BigInteger.ZERO, BigInteger::add);
-        System.out.println("Day 11 extra credit (750 iterations) result: " + result + " (" + stones.size() + " unique values)");
+        System.out.println("Day 11 extra credit (" + BLINK_COUNT + " iterations) result: " + result + " (" + stones.size() + " unique values)");
     }
 }
