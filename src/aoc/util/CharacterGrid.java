@@ -1,6 +1,7 @@
 package aoc.util;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CharacterGrid {
     private final List<String> rows = new ArrayList<>();
@@ -10,6 +11,12 @@ public class CharacterGrid {
 
     public CharacterGrid(CharacterGrid other) {
         this.rows.addAll(other.rows);
+    }
+
+    public CharacterGrid(int height, int width, char fill) {
+        for (int r = 0; r < height; r++) {
+            rows.add(String.valueOf(fill).repeat( width));
+        }
     }
 
     public void addRow(String row) {
@@ -93,6 +100,13 @@ public class CharacterGrid {
 
         path.forEach(l -> newGrid.set(l, x));
 
+        return newGrid;
+    }
+
+    public CharacterGrid overlayCount(Collection<Loc> locs) {
+        CharacterGrid newGrid = new CharacterGrid(this);
+        Map<Loc,Long> counts = locs.stream().collect(Collectors.groupingBy(l -> l, Collectors.counting()));
+        counts.forEach((k,v) -> newGrid.set(k,(char)('0'+v)));
         return newGrid;
     }
 
