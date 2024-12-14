@@ -5,6 +5,7 @@ import aoc.util.Loc;
 import aoc.util.PuzzleApp;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -62,24 +63,26 @@ public class Day14 extends PuzzleApp {
         System.out.println("Day 14 part 1 result: " + result);
     }
 
-    private int largestCenterBlock(List<Robot> robots) {
-        Loc start =  new Loc(floor.width()/2+1, floor.height()/2+2);
+    private int largestBlock(List<Robot> robots) {
         Set<Loc> locs = robots.stream().map(Robot::position).collect(Collectors.toSet());
-        int blockSize = 0;
-        if (!locs.contains(start)) return 0;
+        AtomicInteger maxBlockSize = new AtomicInteger();
 
-        Deque<Loc> connectedLocs = new ArrayDeque<>();
-        connectedLocs.add(start);
+        locs.forEach(start -> {
+            Set<Loc> seen = new HashSet<>();
+            Deque<Loc> connectedLocs = new ArrayDeque<>();
+            connectedLocs.add(start);
 
-        while (!connectedLocs.isEmpty()) {
-            Loc l = connectedLocs.pop();
-            if (!locs.contains(l)) continue;
-            locs.remove(l);
-            blockSize++;
-            l.adjacent().forEach(connectedLocs::add);
-        }
+            while (!connectedLocs.isEmpty()) {
+                Loc l = connectedLocs.pop();
+                if (seen.contains(l)) continue;
+                seen.add(l);
+                l.adjacent().filter(locs::contains).forEach(connectedLocs::add);
+            }
 
-        return blockSize;
+            if (seen.size() > maxBlockSize.get()) maxBlockSize.set(seen.size());
+        });
+
+        return maxBlockSize.get();
     }
 
     public void processPartTwo() {
@@ -95,20 +98,20 @@ public class Day14 extends PuzzleApp {
 //        }
 
         // Look for an iteration with a large block of connected robots:
-//        int b = 0;
-//        while ((b = largestCenterBlock(robots)) < 100) {
-//            robots.forEach(r -> { r.step(1); r.wrap(floor.width(), floor.height()); });
-//            stepCounter++;
-//        }
-//
-//        System.out.println("Iteration " + stepCounter + " blocks = " + b);
-
-        // Look for a point at which all robots occupy their own squares (no overlap):
-        while (robots.stream().map(Robot::position).distinct().count() < robots.size())
-        {
+        int b;
+        while ((b = largestBlock(robots)) < 100) {
             robots.forEach(r -> { r.step(1); r.wrap(floor.width(), floor.height()); });
             stepCounter++;
         }
+
+        System.out.println("Iteration " + stepCounter + " blocks = " + b);
+
+        // Look for a point at which all robots occupy their own squares (no overlap):
+//        while (robots.stream().map(Robot::position).distinct().count() < robots.size())
+//        {
+//            robots.forEach(r -> { r.step(1); r.wrap(floor.width(), floor.height()); });
+//            stepCounter++;
+//        }
 
         // System.out.println(floor.overlayCount(robots.stream().map(Robot::position).toList()));
 
