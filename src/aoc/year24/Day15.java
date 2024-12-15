@@ -16,23 +16,23 @@ public class Day15 extends PuzzleApp {
     }
 
     public String filename() {
-        return "data/year24/day15-sample2";
+        return "data/year24/day15";
     }
 
     private final CharacterGrid originalMap = new CharacterGrid();
     private String moves = "";
 
     public void parseLine(String line) {
-        if (line.isEmpty()) {
-            return;
-        } else if (line.startsWith("#")) {
-            originalMap.addRow(line);
-        } else {
-            moves = moves + line;
+        if (!line.isEmpty()) {
+            if (line.startsWith("#")) {
+                originalMap.addRow(line);
+            } else {
+                moves = moves + line;
+            }
         }
     }
 
-    private static Map<Character,Direction> directions = new HashMap<>();
+    private static final Map<Character,Direction> directions = new HashMap<>();
 
     static {
         directions.put('^', Direction.UP);
@@ -82,7 +82,7 @@ public class Day15 extends PuzzleApp {
 
     private String widen(String line) {
         return line.chars().mapToObj(c ->  switch(c) {
-                    case '@' -> "@ ";
+                    case '@' -> "@.";
                     case '#' -> "##";
                     case 'O' -> "[]";
                     case '.' -> "..";
@@ -90,87 +90,61 @@ public class Day15 extends PuzzleApp {
                 }).collect(Collectors.joining(""));
     }
 
-    private CharacterGrid wideMap = new CharacterGrid();
+    private final CharacterGrid wideMap = new CharacterGrid();
 
-    private Set<Loc> canMove(Set<Loc> boxes, Direction d) {
-        if (boxes.isEmpty()) return new HashSet<>();
-
-        Set<Loc> newBoxes = new HashSet<>();
-
-        boxes.forEach(b -> {
-             if (wideMap.at(b.step(d)) == '[') {
-                 newBoxes.add(b.step(d));
-                 newBoxes.add(b.step(d).step(Direction.RIGHT));
-             } else if (wideMap.at(b.step(d)) == ']') {
-                 newBoxes.add(b.step(d));
-                 newBoxes.add(b.step(d).step(Direction.LEFT));
-             }
-        });
-
-        System.out.println("boxes = " + boxes + ", newBoxes = " + newBoxes);
-
-        Set<Loc> result = new HashSet<>();
-
-        if (newBoxes.isEmpty()) { // See if we can move what we've already got
-            boxes.forEach(box -> {
-                if (wideMap.at(box.step(d)) == '.') {
-                    System.out.println("Box " + box + " can move!");
-                    result.add(box);
-                } else {
-                    System.out.println("Box " + box + " CAN'T move!");
-                }
-            });
-        } else {
-            result.addAll(boxes);
-            result.addAll(newBoxes);
+    /*
+     * Test to see if we can move all locs in the given direction. If we can, then move them, otherwise don't.
+     */
+    private Set<Loc> wideMove(Set<Loc> locs, Direction d) {
+        if (locs.isEmpty()) {
+            return locs;
         }
 
-        return result;
-    }
+        if (locs.stream().anyMatch(l -> wideMap.at(l.step(d)) == '#')) { // At least one loc hits a wall
+            System.out.println("Locs " + locs + " hit a wall " + d);
+            return locs; // return without moving
+        }
 
-    private Loc wideMove(Loc l, Direction d) {
-        if (wideMap.at(l.step(d)) == '#') { // wall, can't move
-            return l;
-        } else if ((d.equals(Direction.LEFT) || d.equals(Direction.RIGHT))
-                && (wideMap.at(l.step(d)) == '[' || wideMap.at(l.step(d)) == ']')) {
-            wideMove(l.step(d),d);
-        } else if ((d.equals(Direction.UP) || d.equals(Direction.DOWN))
-                && (wideMap.at(l.step(d)) == '[' || wideMap.at(l.step(d)) == ']')) {
-            Set<Loc> boxes = new HashSet<>();
-            boxes.add(l.step(d));
-            if (wideMap.at(l.step(d)) == '[') boxes.add(l.step(d).step(Direction.RIGHT));
-            if (wideMap.at(l.step(d)) == ']') boxes.add(l.step(d).step(Direction.LEFT));
-            boxes = canMove(boxes,d);
-            if (boxes.isEmpty()) {
-                System.out.println("can't move boxes: " + boxes);
-                return l;
-            } else {
-                System.out.println("moving all boxes: " + boxes);
-                while (!boxes.isEmpty()) {
-                    Iterator<Loc> it = boxes.iterator();
-                    while (it.hasNext()) {
-                        Loc b = it.next();
-                        if (wideMap.at(b.step(d)) == '.') {
-                            System.out.println( "swapping " + b + " and " + b.step(d));
-                            char c = wideMap.at(b);
-                            wideMap.set(b, '.');
-                            wideMap.set(b.step(d), c);
-                            it.remove();
-                        }
-                    }
-                }
+        if ((d.equals(Direction.LEFT) || d.equals(Direction.RIGHT))) {
+            Set<Loc> boxes = locs.stream().filter(l -> wideMap.at(l.step(d)) == '[' || wideMap.at(l.step(d)) == ']').collect(Collectors.toSet());
+            if (!boxes.isEmpty()) {
+                System.out.println("Locs " + boxes + " pushing " + d);
+                wideMove(boxes.stream().map(l -> l.step(d)).collect(Collectors.toSet()), d);
             }
         }
 
-        if (wideMap.at(l.step(d)) == '.') { // if there's room to move now, then move
-            char c = wideMap.at(l);
-            // System.out.println("Moving '" + c + "' at " + l + " " + d);
-            wideMap.set(l, '.');
-            l = l.step(d);
-            wideMap.set(l, c);
+        if ((d.equals(Direction.UP) || d.equals(Direction.DOWN))) { // Here's the hard part...
+            Set<Loc> boxes = locs.stream().filter(l -> wideMap.at(l.step(d)) == '[' || wideMap.at(l.step(d)) == ']').collect(Collectors.toSet());
+
+            if (!boxes.isEmpty()) {
+                // Identify counterparts of each box ('[' to go with ']' and vice-versa):
+                Set<Loc> moreboxes = new HashSet<>();
+                boxes.forEach(box -> {
+                    moreboxes.add(box);
+                    if (wideMap.at(box.step(d)) == '[') moreboxes.add(box.step(Direction.RIGHT));
+                    if (wideMap.at(box.step(d)) == ']') moreboxes.add(box.step(Direction.LEFT));
+                });
+                System.out.println("Moreboxes " + moreboxes + " pushing " + d);
+                wideMove(moreboxes.stream().map(l -> l.step(d)).collect(Collectors.toSet()), d);
+            }
         }
 
-        return l;
+        // Now we can check the map and see if the way is clear for us to move
+
+        if (locs.stream().allMatch(l -> wideMap.at(l.step(d)) == '.')) {
+            System.out.println("Locs " + locs + " can move " + d + "!");
+            Set<Loc> newLocs = new HashSet<>();// The whole group can move!
+            locs.forEach(l -> {
+                char c = wideMap.at(l);
+                wideMap.set(l, '.');
+                l = l.step(d);
+                newLocs.add(l);
+                wideMap.set(l, c);
+            });
+            return newLocs;
+        }
+
+        return locs;
     }
 
     public void processPartTwo() {
@@ -181,8 +155,17 @@ public class Day15 extends PuzzleApp {
         Loc robot = wideMap.locate('@');
 
         for (char c : moves.toCharArray()) {
-            robot = wideMove(robot, directions.get(c));
+            Set<Loc> moveResult = wideMove(Set.of(robot), directions.get(c));
+            if (!robot.equals(moveResult.stream().findFirst().get())) {
+                System.out.println("Move " + directions.get(c) + " robot moved from " + robot + " to " + moveResult);
+            }
+            robot = moveResult.stream().findFirst().get();
             System.out.println(wideMap);
         }
+    }
+
+    public void resultsPartTwo() {
+        long gpsTotal = wideMap.locateAll('[').stream().mapToLong(l -> 100L * l.y() + l.x()).sum();
+        System.out.println("Day 15 part 2 result: " + gpsTotal);
     }
 }
