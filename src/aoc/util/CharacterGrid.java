@@ -19,6 +19,10 @@ public class CharacterGrid {
         }
     }
 
+    public List<String> rows() {
+        return rows;
+    }
+
     public void addRow(String row) {
         rows.add(row);
     }
