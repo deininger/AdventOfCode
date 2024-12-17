@@ -1,13 +1,13 @@
 package aoc.year24;
 
 import aoc.util.PuzzleApp;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 public class Day17 extends PuzzleApp {
     public static void main(String[] args) {
@@ -121,8 +121,11 @@ public class Day17 extends PuzzleApp {
         System.out.println("Day 17 part 1 result: " + output.stream().map(String::valueOf).collect(Collectors.joining(",")));
     }
 
-    private final AtomicLong magicRegisterAValue = new AtomicLong();
+    private final AtomicLong magicRegisterAValue = new AtomicLong(Long.MAX_VALUE);
 
+    /*
+     * Brute force approach: Does not work, search space is too large.
+     *
     public void processPartTwo() {
         LongStream.iterate(0, i -> i + 1).parallel()
                 .peek(i -> {if (i % 1000000 == 0) System.out.println("looping " + i);})
@@ -134,11 +137,59 @@ public class Day17 extends PuzzleApp {
             }
             return false;
         });
+    }*/
+
+    private boolean matches(List<Integer> out, List<Integer> program, int depth) {
+        if (out.size() < depth) return false;
+        boolean matches = true;
+        for (int i = 0; i < depth; i++) {
+            if (!out.get(i).equals(program.get(program.size()-depth+i))) {
+                matches = false;
+                break;
+            }
+        }
+        return matches;
+    }
+
+    private Set<Long> test(long A, int depth) {
+        Set<Long> results = new HashSet<>();
+        for (int b = 0; b < 8; b++) {
+            List<Integer> out = run(A+b,0L, 0L);
+            // System.out.println("Trying " + A + " + " + b + " = " + (A+b) + " -> " + out);
+            if (matches(out, program, depth)) {
+                // System.out.println("Found a solution so far..." + (A+b) + " " + program + " " + out);
+                results.add(A+b);
+            }
+        }
+        return results;
+    }
+
+    public void processPartTwo() {
+        Deque<Pair<Integer,Long>> dq = new ArrayDeque<>();
+        dq.add(Pair.of(1, 0L));
+
+        while (!dq.isEmpty()) {
+            Pair<Integer,Long> depthAndA = dq.pop();
+            int depth = depthAndA.getLeft();
+            Long registerA = depthAndA.getRight();
+            Set<Long> results = test(registerA, depth);
+            if (depth == program.size() && !results.isEmpty()) {
+                long result = results.stream().min(Long::compare).get();
+                if (result < magicRegisterAValue.get()) magicRegisterAValue.set( result );
+            } else {
+                results.forEach(r -> dq.add(Pair.of(depthAndA.getLeft() + 1, r << 3)));
+            }
+        }
     }
 
     public void resultsPartTwo() {
         System.out.println("Day 17 part 2 result: " + magicRegisterAValue);
     }
+
+    // 109019476355480 is too high
+    // 13627434544435 is too low
+    // 109019476355482 can't be correct...
+    // 109019476330651
 
     enum Operators {
         ADV(0), BXL(1), BST(2), JNZ(3), BXC(4), OUT(5), BDV(6), CDV(7);
