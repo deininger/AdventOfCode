@@ -49,9 +49,11 @@ public enum Direction {
 	
 	public Direction turnAround() {
 		return Direction.withIntValue((this.intValue + 2) % 4);
-	}		
+	}
 
 	public Direction turnLeft() {
 		return Direction.withIntValue((this.intValue + 3) % 4);
-	}		
+	}
+
+	public boolean isOpposite(Direction d) { return this.equals(d.turnAround()); }
 }
