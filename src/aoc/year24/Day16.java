@@ -54,11 +54,15 @@ public class Day16 extends PuzzleApp {
                 }
             }
 
+            // I'm sure there's an efficiency to be gained here by walking forward as far as we can while
+            // there are no decisions to be made (until we get to the next point in the maze where a choice
+            // is possible), but it doesn't seem necessary for this size map.
+
             for (Direction newD : Direction.values()) { // Turn (or not) and take a step in each direction
                 if (newD.isOpposite(cld.dir())) continue; // Don't turn around
                 Loc newLoc = cld.loc().step(newD);
-                int newCost = cld.cost() + 1 + (newD.equals(cld.dir()) ? 0 : 1000); // Cost goes up by 1, plus 1000 if we've turned
                 if (map.at(newLoc) == '#') continue; // Don't run into walls
+                int newCost = cld.cost() + 1 + (newD.equals(cld.dir()) ? 0 : 1000); // Cost goes up by 1, plus 1000 if we've turned
                 CostLocDir newCld = new CostLocDir(newCost, newLoc, newD, cld.path());
                 if (seen.contains(newCld)) continue; // Don't revisit the same loc & dir
                 pq.add(newCld);
