@@ -139,6 +139,11 @@ public class Day17 extends PuzzleApp {
         });
     }*/
 
+    /*
+     * Determines if the "out" array matches the "program" array when comparing all
+     * the "out" array to only the last "depth" elements of the program array.
+     *
+     */
     private boolean matches(List<Integer> out, List<Integer> program, int depth) {
         if (out.size() < depth) return false;
         boolean matches = true;
@@ -151,6 +156,11 @@ public class Day17 extends PuzzleApp {
         return matches;
     }
 
+    /*
+     * try adding the integers 0 through 8 to the given A regiser value, to see which
+     * new values produce an output matching the program, to the given depth.
+     * The matching values, if any, are returned.
+     */
     private Set<Long> test(long A, int depth) {
         Set<Long> results = new HashSet<>();
         for (int b = 0; b < 8; b++) {
@@ -164,6 +174,23 @@ public class Day17 extends PuzzleApp {
         return results;
     }
 
+    /*
+     * For part two, I looked at what my "program" was doing, and it's clear that each iteration
+     * of the program will produce one output number, and will decrease the A register by 3 bits.
+     *     [0,3] divides A by 8 and puts the result back in A
+     *     [5,5] outputs the lowest 3 bits of B
+     * I'm guessing everyone's program has these same two operations, along with other stuff.
+     *
+     * So I took the apprach that I should be able to determine the answer 3 bits at a time.
+     * This method starts out with a "depth 1" guess of 0, and calls the test() method above.
+     * The test method tries adding in all the 3-bit numbers, 0 through 8, to see if we can
+     * correctly generate the last output. All the values which work are returned and added
+     * to the queue, at an increased depth, and left-shifted by 3 bits to make room for the
+     * next round of guesses. Each additonal depth has to correclty match 1 more output.
+     *
+     * Once we get results at the full depth (output matches the entire program), we just
+     * grab the smallest register A solution (yes there's more than one).
+     */
     public void processPartTwo() {
         Deque<Pair<Integer,Long>> dq = new ArrayDeque<>();
         dq.add(Pair.of(1, 0L));
@@ -185,11 +212,6 @@ public class Day17 extends PuzzleApp {
     public void resultsPartTwo() {
         System.out.println("Day 17 part 2 result: " + magicRegisterAValue);
     }
-
-    // 109019476355480 is too high
-    // 13627434544435 is too low
-    // 109019476355482 can't be correct...
-    // 109019476330651
 
     enum Operators {
         ADV(0), BXL(1), BST(2), JNZ(3), BXC(4), OUT(5), BDV(6), CDV(7);
