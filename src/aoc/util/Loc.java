@@ -16,6 +16,11 @@ public class Loc {
 		this.y = y;
 	}
 
+	public Loc(int[] coordinates) {
+		this.x = coordinates[0];
+		this.y = coordinates[1];
+	}
+
 	public Loc(Loc other) {
 		this.x = other.x;
 		this.y = other.y;
