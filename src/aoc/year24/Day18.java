@@ -41,7 +41,7 @@ public class Day18 extends PuzzleApp {
         Loc start = new Loc(0, 0);
         Loc end = new Loc(70, 70);
 
-        solutionPartOne = MazeSolver.solve(start, end, l -> space.contains(l) && space.at(l) != '#');
+        solutionPartOne = MazeSolver.solveWithPriorityQueue(start, end, l -> space.contains(l) && space.at(l) != '#');
     }
 
     public void results() {
@@ -62,7 +62,7 @@ public class Day18 extends PuzzleApp {
         for (int i = 1; i < coordinates.size(); i++) {
             Loc c = coordinates.get(i);
             usedCoordinates.add(c);
-            if (MazeSolver.solve(start, end, l -> l.x() >= 0 && l.x() <= 70 && l.y() >= 0 && l.y() <= 70
+            if (MazeSolver.solveWithBreadthFirstSearch(start, end, l -> l.x() >= 0 && l.x() <= 70 && l.y() >= 0 && l.y() <= 70
                     && !usedCoordinates.contains(l)) == null) {
                 solutionPartTwo = c;
                 break;

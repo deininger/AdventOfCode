@@ -3,7 +3,39 @@ package aoc.util;
 import java.util.*;
 
 public class MazeSolver {
-    public static Node solve(Loc start, Loc end, LocationValidator validator) {
+    public static Node solveWithBreadthFirstSearch(Loc start, Loc end, LocationValidator validator) {
+        Queue<Node> q = new LinkedList<>();
+        q.add(new Node(start, 0, null));
+
+        // Keep track of visited locations
+        Set<Loc> visited = new HashSet<>();
+
+        while (!q.isEmpty()) {
+            Node current = q.poll();
+
+            if (current.loc().equals(end)) {
+                return current;
+            }
+
+            if (visited.contains(current.loc())) continue;
+
+            current.loc().adjacent().filter(validator::isValid)
+                    .forEach(a -> q.add(new Node(a, current.totalDistance() + 1, current)));
+
+            visited.add(current.loc());
+        }
+
+        return null;
+    }
+
+    /*
+     * TODO: add a weight function to this algorithm (for calculating the distance
+     *       from one node to the next), right now it has a 1 weight hardcoded in.
+     *
+     * TODO: Need a way to support "Loc+Direction" concept instead of just Loc,
+     *       perhaps by parameterizing this class and the embeddeded Node class.
+     */
+    public static Node solveWithPriorityQueue(Loc start, Loc end, LocationValidator validator) {
         // Create a priority queue for nodes to visit
         PriorityQueue<Node> pq = new PriorityQueue<>();
         pq.add(new Node(start, 0, null));
@@ -65,10 +97,10 @@ public class MazeSolver {
 
         public Set<Loc> path() {
             Set<Loc> path;
-            if (predecessor == null) {
+            if (predecessor() == null) {
                 path = new HashSet<>();
             } else {
-                path = predecessor.path();
+                path = predecessor().path();
             }
             path.add(loc);
             return path;
