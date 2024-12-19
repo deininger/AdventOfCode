@@ -76,6 +76,9 @@ public class Day19 extends PuzzleApp {
         // We get rid of any pattern which can be made up of already-added patterns.
         // This works for part 1, but won't help for part 2.
 
+        // Now that part 2 is written, I could rewrite part 1 to use the same countMatches()
+        // mechanism with the memoization, rather than the "unique patterns" approach.
+
         originalPatterns.forEach(p -> {
             if (!findMatch(p, uniquePatterns)) uniquePatterns.add(p);
         });
