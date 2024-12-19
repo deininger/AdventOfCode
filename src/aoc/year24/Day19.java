@@ -4,6 +4,7 @@ import aoc.util.PuzzleApp;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Day19 extends PuzzleApp {
     public static void main(String[] args) {
@@ -50,7 +51,7 @@ public class Day19 extends PuzzleApp {
      * The logic of this method is otherwise similar to the findMatch method above,
      * other than we're counting the number of matches rather than just finding one.
      */
-    private long countMatches(String design, List<String> patterns, Map<String,Long> memo) {
+    private long countMatches(String design, List<String> patterns, ConcurrentMap<String,Long> memo) {
         if (design.isEmpty()) return 1L;
         if (memo.containsKey(design)) return memo.get(design);
 
@@ -95,7 +96,7 @@ public class Day19 extends PuzzleApp {
     private long partTwoResults;
 
     public void processPartTwo() {
-        Map<String,Long> memo = new ConcurrentHashMap<>();
+        ConcurrentMap<String,Long> memo = new ConcurrentHashMap<>();
 
         // We have to go back to the original set of patterns, in order to count all
         // the ways we can make the designs.
