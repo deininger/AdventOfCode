@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Day18 extends PuzzleApp {
     public static void main(String[] args) {
-        System.out.println("Day 16: RAM Run");
+        System.out.println("Day 18: RAM Run");
         PuzzleApp app = new aoc.year24.Day18();
         app.run();
     }
