@@ -36,9 +36,13 @@ public class Day20 extends PuzzleApp {
      *
      * Each "cheat" can be located by finding a sequence of ".#." in the maze either
      * horizontally or vertically. The savings for that cheat would be the distance
-     * (number of nodes) between the start and end of the cheat, minus one.
+     * (number of nodes) in between the start and end of the cheat, minus one, or
+     * as coded, the difference in index of the start and end of the cheat, minus 2
+     * (the "manhattan distance" between the start and end of the cheat locs).
      *
-     * The maze (mine, at least) doesn't have any opporunities for diagonal cheating.
+     * The maze (mine, at least) doesn't have any opporunities for diagonal cheating,
+     * so I don't account for it in the code, but it would be easy to add 4 more cases
+     * to the loop.
      *
      * I don't really need to collect all the cheats into a HashMap, I could just increment
      * a counter, but having the map is helpful when debugging.
