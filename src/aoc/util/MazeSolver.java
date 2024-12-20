@@ -95,15 +95,18 @@ public class MazeSolver {
             return predecessor;
         }
 
-        public Set<Loc> path() {
-            Set<Loc> path;
-            if (predecessor() == null) {
-                path = new HashSet<>();
-            } else {
-                path = predecessor().path();
-            }
+        /*
+         * Returns all the locs from start to this node, in order.
+         */
+        public List<Loc> path() {
+            List<Loc> path = new ArrayList<>();
             path.add(loc);
-            return path;
+            Node p = predecessor();
+            while (p != null) {
+                path.add(p.loc());
+                p = p.predecessor();
+            }
+            return path.reversed();
         }
 
         public int compareTo(Node other) {

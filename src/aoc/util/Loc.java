@@ -1,8 +1,6 @@
 package aoc.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Loc {
@@ -114,7 +112,24 @@ public class Loc {
 		
 		return results.stream();
 	}
-	
+
+	/*
+	 * Returns all Locs within "distance" of this Loc, using manhattan distance.
+	 */
+	public Set<Loc> nearby(int distance) {
+		Set<Loc> results = new HashSet<>();
+
+		for(int i = 0; i < distance; i++) {
+			results.add(new Loc(x+i, y-distance+i));
+			results.add(new Loc(x+distance-i, y+i));
+			results.add(new Loc(x-i, y+distance-i));
+			results.add(new Loc(x-distance+i, y-i));
+		}
+
+		if (distance > 1) results.addAll(this.nearby(distance-1));
+		return results;
+	}
+
 	public Stream<Loc> pathTo(Loc end) {
 		List<Loc> points = new ArrayList<>(distance(end));
 		points.add(this);
