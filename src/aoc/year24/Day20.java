@@ -103,6 +103,11 @@ public class Day20 extends PuzzleApp {
                 Loc l = new Loc(r,c);
                 if (maze.at(l) == '#') continue;
 
+                // The "nearby" function returns all locs within the given (manhattan) distance of L.
+                // We then filter out any of those locs which are walls, and calculate & store
+                // the potential cheat savings for the rest. Note that the savings calculation here
+                // is "directional" (no absolute value) to avoid double-counting cheats.
+
                 l.nearby(20).parallelStream()
                         .filter(a -> maze.contains(a) && maze.at(a) != '#')
                         .forEach(a -> {
