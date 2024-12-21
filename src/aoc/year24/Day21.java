@@ -16,7 +16,7 @@ public class Day21 extends PuzzleApp {
     }
 
     public String filename() {
-        return "data/year24/day21-small";
+        return "data/year24/day21";
     }
 
     private final List<String> codes = new ArrayList<>();
@@ -56,6 +56,101 @@ public class Day21 extends PuzzleApp {
             .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     private final char[] keypadPositions = { 'A', 'A', 'A' }; // index 0 is the numeric keypad, the rest are directional.
+
+    private static final Loc UNSAFE_NUMERIC = new Loc(0,3);
+    private static final Loc UNSAFE_DIRECTIONAL = new Loc(0,0);
+
+
+    private Set<String> allMoves(Loc current, Loc target, Loc unsafe) {
+        Set<String> results = new HashSet<>();
+
+        Loc delta = target.difference(current);
+
+        if (delta.x() == 0 && delta.y() == 0) {
+            results.add(""); // No movement necessary
+        }
+
+        if (delta.x() > 0) {
+            Loc l = current.move(Direction.RIGHT);
+            if (!l.equals(unsafe)) {
+                // System.out.println("Moved RIGHT from " + current + " through " + l  + " to " + target);
+                Set<String> s = allMoves(l, target, unsafe);
+                s.forEach(r -> results.add(">" + r));
+            }
+        } else if (delta.x() < 0) {
+            Loc l = current.move(Direction.LEFT);
+            if (!l.equals(unsafe)) {
+                // System.out.println("Moved LEFT from " + current + " through " + l  + " to " + target);
+                Set<String> s = allMoves(l, target, unsafe);
+                s.forEach(r -> results.add("<" + r));
+            }
+        }
+
+        if (delta.y() > 0) {
+            Loc l = current.move(Direction.DOWN);
+            if (!l.equals(unsafe)) {
+                // System.out.println("Moved DOWN from " + current + " through " + l  + " to " + target);
+                Set<String> s = allMoves(l, target, unsafe);
+                s.forEach(r -> results.add("v" + r));
+            }
+        } else if (delta.y() < 0) {
+            Loc l = current.move(Direction.UP);
+            if (!l.equals(unsafe)) {
+                // System.out.println("Moved UP from " + current + " through " + l  + " to " + target);
+                Set<String> s = allMoves(l, target, unsafe);
+                s.forEach(r -> results.add("^" + r));
+            }
+        }
+
+        // System.out.println("allMoves from " + current + " to " + target + ": " + results);
+        return results;
+    }
+
+    private Set<String> mapToNumericAll(String code) {
+        Set<String> results = new HashSet<>();
+
+        for (char c : code.toCharArray()) {
+            Loc current = numericKeypadCharacterPositions.get(keypadPositions[0]);
+            Loc target = numericKeypadCharacterPositions.get(c);
+
+            Set<String> ss = allMoves(current, target, UNSAFE_NUMERIC);
+
+            Set<String> x = new HashSet<>();
+            if (results.isEmpty()) {
+                ss.forEach(s -> x.add(s + "A"));
+            } else {
+                results.forEach(r -> ss.forEach(s -> x.add(r + s + "A")));
+            }
+            results = x;
+
+            keypadPositions[0] = c;
+        }
+
+        return results;
+    }
+
+    private Set<String> mapToDirectionalAll(String code, int keypadNumber) {
+        Set<String> results = new HashSet<>();
+
+        for (char c : code.toCharArray()) {
+            Loc current = directionalKeypadCharacterPositions.get(keypadPositions[keypadNumber]);
+            Loc target = directionalKeypadCharacterPositions.get(c);
+
+            Set<String> ss = allMoves(current, target, UNSAFE_DIRECTIONAL);
+
+            Set<String> x = new HashSet<>();
+            if (results.isEmpty()) {
+                ss.forEach(s -> x.add(s + "A"));
+            } else {
+                results.forEach(r -> ss.forEach(s -> x.add(r + s + "A")));
+            }
+            results = x;
+
+            keypadPositions[keypadNumber] = c;
+        }
+
+        return results;
+    }
 
     private String mapToNumeric(String code) {
         StringBuilder result = new StringBuilder();
@@ -141,33 +236,61 @@ public class Day21 extends PuzzleApp {
 
     public void process() {
         for (String code: codes) {
-            String mapLevelOne = mapToNumeric(code); // First robot
-            String mapLevelTwo = mapToDirectional(mapLevelOne, 1); // Second robot
-            String result = mapToDirectional(mapLevelTwo, 2); // Me controlling third robot
-            System.out.println(code);
-            System.out.println(mapLevelOne + " -> " + testNumeric(mapLevelOne));
-            System.out.println(mapLevelTwo + " -> " + testDirectional(mapLevelTwo) + " -> " + testNumeric(testDirectional(mapLevelTwo)));
-            System.out.println(result + " -> " + testDirectional(result) + " -> " + testDirectional(testDirectional(result)) + " -> " + testNumeric(testDirectional(testDirectional(result))));
-            System.out.println("*** length=" + result.length() + " ***");
-            System.out.println("keypad positions: " + Arrays.toString(keypadPositions));
-            partOneResult += (result.length() * Integer.parseInt(code.substring(0,3)));
+            // String mapLevelOne = mapToNumeric(code); // First robot
+            // String mapLevelTwo = mapToDirectional(mapLevelOne, 1); // Second robot
+            // String result = mapToDirectional(mapLevelTwo, 2); // Me controlling third robot
+            // System.out.println(code);
+            // System.out.println(mapLevelOne + " -> " + testNumeric(mapLevelOne));
+            // System.out.println(mapLevelTwo + " -> " + testDirectional(mapLevelTwo) + " -> " + testNumeric(testDirectional(mapLevelTwo)));
+            // System.out.println(result + " -> " + testDirectional(result) + " -> " + testDirectional(testDirectional(result)) + " -> " + testNumeric(testDirectional(testDirectional(result))));
+            // System.out.println("*** length=" + result.length() + " ***");
+            // partOneResult += (result.length() * Integer.parseInt(code.substring(0,3)));
+
+            Set<String> s1 = mapToNumericAll(code);
+            // s1.forEach(x -> System.out.println(x + " -> " + testNumeric(x)));
+            Set<String> s2 = s1.stream().flatMap(s -> mapToDirectionalAll(s, 1).stream()).collect(Collectors.toSet());
+            // s2.forEach(x -> System.out.println(x + " -> " + testNumeric(testDirectional(x))));
+            Set<String> s3 = s2.stream().flatMap(s -> mapToDirectionalAll(s, 2).stream()).collect(Collectors.toSet());
+            // s3.forEach(x -> System.out.println(x + " -> " + testNumeric(testDirectional(testDirectional(x)))));
+
+            int minLength = s3.stream().mapToInt(String::length).min().orElse(0);
+            int codeValue = Integer.parseInt(code.substring(0,3));
+            partOneResult += (minLength * codeValue);
+            System.out.println("Code " + code + ": " + minLength + " * " + codeValue + " = " + (minLength * codeValue));
+         }
+    }
+
+    public void results() {
+        System.out.println("Day 21 part 1 result: " + partOneResult);
+    }
+
+    private int partTwoResult = 0;
+
+    public void processPartTwo() {
+        for (String code: codes) {
+            Set<String> s1 = mapToNumericAll(code);
+            int minLength = s1.stream().mapToInt(String::length).min().orElse(0);
+            int finalMinLength = minLength;
+            s1 = s1.stream().filter(s -> s.length() == finalMinLength).collect(Collectors.toSet());
+
+            for (int i = 0; i < 25; i++) {
+                int finalI = i;
+                s1 = s1.stream().flatMap(s -> mapToDirectionalAll(s, finalI).stream()).collect(Collectors.toSet());
+                minLength = s1.stream().mapToInt(String::length).min().orElse(0);
+                int finalMinLength1 = minLength;
+                s1 = s1.stream().filter(s -> s.length() == finalMinLength1).collect(Collectors.toSet());
+                System.out.println("Code " + code + " iteration " + i + " complete, set size = " + s1.size());
+            }
+
+            minLength = s1.stream().mapToInt(String::length).min().orElse(0);
+            int codeValue = Integer.parseInt(code.substring(0,3));
+            partTwoResult += (minLength * codeValue);
+            System.out.println("Code " + code + ": " + minLength + " * " + codeValue + " = " + (minLength * codeValue));
         }
     }
 
-    public void result() {
-        System.out.println("Day 21 part 1 result: " + partOneResult);
+    public void resultsPartTwo() {
+        System.out.println("Day 21 part 2 result: " + partTwoResult);
     }
 }
-
-// 029A: <vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A
-// 980A: <v<A>>^AAAvA^A<vA<AA>>^AvAA<^A>A<v<A>A>^AAAvA<^A>A<vA>^A<A>A
-// 179A: <v<A>>^A<vA<A>>^AAvAA<^A>A<v<A>>^AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
-// 456A: <v<A>>^AA<vA<A>>^AAvAA<^A>A<vA>^A<A>A<vA>^A<A>A<v<A>A>^AAvA<^A>A
-// 379A: <v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
-
-// 179A
-//   <<^A^^A>>AvvvA
-//     v<<AA>^A>A<AA>AvAA^Av<AAA>^A
-//       v<A<AA>>^AAvA<^A>AvA^Av<<A>>^AAvA^Av<A>^AA<A>Av<A<A>>^AAAvA<^A>A (length 64)
-// 179A: <v<A>>^A<vA<A>>^AAvAA<^A>A<v<A>>^AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
 
