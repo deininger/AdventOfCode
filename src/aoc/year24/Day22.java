@@ -45,7 +45,7 @@ public class Day22 extends PuzzleApp {
         IntStream.range(0, 2000).forEach(_ -> secretNumbersPartOne.replaceAll(this::nextSecretNumber));
     }
 
-    public void results() { // 14119253575
+    public void results() {
         // System.out.println("Secret numbers: " + secretNumbers);
         System.out.println("Day 22 Part 1 result: " + secretNumbersPartOne.stream().mapToLong(Long::longValue).sum());
     }
@@ -143,4 +143,3 @@ public class Day22 extends PuzzleApp {
         System.out.println("Day 22 part 2 results: " + bestPrice);
     }
 }
-
