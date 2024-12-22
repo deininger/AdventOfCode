@@ -8,10 +8,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Day21 extends PuzzleApp {
+public class Day21Part1 extends PuzzleApp {
     public static void main(String[] args) {
         System.out.println("Day 21: Keypad Conundrum");
-        PuzzleApp app = new aoc.year24.Day21();
+        PuzzleApp app = new Day21Part1();
         app.run();
     }
 
@@ -25,7 +25,7 @@ public class Day21 extends PuzzleApp {
         codes.add(line);
     }
 
-    private final Map<Character, Loc> numericKeypadCharacterPositions = Stream.of(new Object[][]{
+    public static final Map<Character, Loc> numericKeypadCharacterPositions = Stream.of(new Object[][]{
             {'7', 0, 0},
             {'8', 1, 0},  // +---+---+---+
             {'9', 2, 0},  // | 7 | 8 | 9 |
@@ -39,11 +39,11 @@ public class Day21 extends PuzzleApp {
             {'A', 2, 3}
     }).collect(Collectors.toMap(data -> (char) data[0], data -> new Loc((int) data[1], (int) data[2])));
 
-    private final Map<Loc, Character> invertedNumericKeypad = numericKeypadCharacterPositions.entrySet()
+    public static final Map<Loc, Character> invertedNumericKeypad = numericKeypadCharacterPositions.entrySet()
             .stream()
             .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
-    private final Map<Character, Loc> directionalKeypadCharacterPositions = Stream.of(new Object[][]{
+    public static final Map<Character, Loc> directionalKeypadCharacterPositions = Stream.of(new Object[][]{
             {'^', 1, 0},  //     +---+---+
             {'A', 2, 0},  //     | ^ | A |
             {'<', 0, 1},  // +---+---+---+
@@ -51,17 +51,17 @@ public class Day21 extends PuzzleApp {
             {'>', 2, 1}   // +---+---+---+
     }).collect(Collectors.toMap(data -> (char) data[0], data -> new Loc((int) data[1], (int) data[2])));
 
-    private final Map<Loc, Character> invertedDirectionalKeypad = directionalKeypadCharacterPositions.entrySet()
+    public static final Map<Loc, Character> invertedDirectionalKeypad = directionalKeypadCharacterPositions.entrySet()
             .stream()
             .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     private final char[] keypadPositions = new char[26];
 
-    private static final Loc UNSAFE_NUMERIC = new Loc(0, 3);
-    private static final Loc UNSAFE_DIRECTIONAL = new Loc(0, 0);
+    public static final Loc UNSAFE_NUMERIC = new Loc(0, 3);
+    public static final Loc UNSAFE_DIRECTIONAL = new Loc(0, 0);
 
 
-    private Set<String> allMoves(Loc current, Loc target, Loc unsafe) {
+    public static Set<String> allMoves(Loc current, Loc target, Loc unsafe) {
         Set<String> results = new HashSet<>();
 
         Loc delta = target.difference(current);
@@ -320,6 +320,7 @@ public class Day21 extends PuzzleApp {
         System.out.println("Day 21 part 1 result: " + partOneResult);
     }
 
+    /*
     private final Map<String,Long> shortestPathForEachCharacter = new HashMap<>();
 
     public void processPartTwo() {
@@ -361,5 +362,6 @@ public class Day21 extends PuzzleApp {
 
         System.out.println("Day 21 part 2 result: " + partTwoResult);
     }
+     */
 }
 
