@@ -40,6 +40,8 @@ public class Day22 extends PuzzleApp {
 
     public void process() {
         // System.out.println("Initial secret numbers: " + initialSecretNumbers);
+
+        // This is a neat way to process the whole list of secret numbers 2000 times (though it doesn't use parallel threads):
         IntStream.range(0, 2000).forEach(_ -> secretNumbersPartOne.replaceAll(this::nextSecretNumber));
     }
 
@@ -48,11 +50,14 @@ public class Day22 extends PuzzleApp {
         System.out.println("Day 22 Part 1 result: " + secretNumbersPartOne.stream().mapToLong(Long::longValue).sum());
     }
 
-    // Track the prices for each secret sequence, keyed by the set of 4 preceding prices changes:
+    // Track the prices for each secret sequence, keyed by the set of 4 preceding prices changes.
+    // We could do something fancy to convert the 4 consecutive price changes into an integer, which would
+    // let us key our maps by a simple number rather than by a list, but this works just fine, just takes
+    // more space.
     private final List<Map<List<Integer>,Integer>> prices = new ArrayList<>();
 
     private void initializePriceList() {
-        IntStream.range(0, secretNumbersPartTwo.size()).forEach(_ -> prices.add(new HashMap<>()));
+        secretNumbersPartTwo.forEach((_,_) -> prices.add(new HashMap<>()));
     }
 
     private int trackPriceChanges(int index, long currentSecretNumber, long nextSecretNumber, Deque<Integer> priceChanges) {
@@ -71,7 +76,7 @@ public class Day22 extends PuzzleApp {
     }
 
     public void processPartTwo() {
-        initializePriceList();
+        initializePriceList(); // Create enough maps to store all our prices
 
         secretNumbersPartTwo.keySet().parallelStream().forEach(i -> {
             final Deque<Integer> priceChanges = new LinkedList<>(); // This tracks prices changes for secretNumbers[i]
@@ -107,6 +112,26 @@ public class Day22 extends PuzzleApp {
             if (totalPrice.get() > bestPrice.get()) bestPrice.set(totalPrice.get());
         });
         */
+
+        /*
+         * This streams function below is equivalent to the commented-out code above.
+         *
+         * It iterates over the prices list, grabs all the maps and creates a stream
+         * over all of them. We then collect all entries into a single map, keyed by
+         * the same keys, summing up all the values, giving us the total price across
+         * all of our input secret sequences, for each key (the key is the list of 4
+         * preceding price changes). Lastly, we select the maximum value from this map
+         * and return it (for our puzzle answer, we only need this value, not the key
+         * which maps to it).
+         *
+         * If we wanted to get the key (one of the keys, since there could be more than
+         * one) which produced this maximum value, we could change the stream after the
+         * collect() call to do:
+         *
+         * .entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null)
+         *
+         * and then get both the key and value out of that Map.Entry.
+         */
 
         int bestPrice = prices.stream()
                 .flatMap(map -> map.entrySet().stream())
