@@ -56,7 +56,6 @@ public class Node<T> implements Comparable<Object> {
     public void findCliques(Collection<Node<T>> clique, int maxCliqueSize, Collection<Node<T>> largestClique) {
         for (Node<T> n : neighbors.keySet()) {
             if (!clique.contains(n) && n.isConnectedToAll(clique)) {
-
                 Set<Node<T>> newClique = new HashSet<>(clique);
                 newClique.add(n);
 
@@ -70,88 +69,6 @@ public class Node<T> implements Comparable<Object> {
             }
         }
     }
-
-
-
-    /*
-    private void findCliques(List<List<Integer>> graph, List<Integer> clique, int v, int maxCliqueSize, List<Integer> largestClique) {
-        for (int u : graph.get(v)) {
-            if (!clique.contains(u) && isConnectedToAll(graph, u, clique)) {
-                List<Integer> newClique = new ArrayList<>(clique);
-                newClique.add(u);
-
-                if (newClique.size() > maxCliqueSize) {
-                    maxCliqueSize = newClique.size();
-                    largestClique.clear();
-                    largestClique.addAll(newClique);
-                }
-
-                findCliques(graph, newClique, u, maxCliqueSize, largestClique);
-            }
-        }
-    }
-    */
-        /*
-    public Set<Node<T>> findLargestFullyConnectedGraph() {
-        Set<Node<T>> largestGraph = new HashSet<>();
-
-        if (this.neighbors.isEmpty()) {
-            return largestGraph;
-        }
-
-        Set<Node<T>> graph = new HashSet<>();
-        Queue<Node<T>> q = new ArrayDeque<>();
-        q.add(this);
-
-        while (!q.isEmpty()) {
-            Node<T> n = q.remove();
-            if (n.isFullyConnected(graph)) graph.add(n);
-            q.addAll(n.neighbors.keySet());
-
-        }
-
-        // Iterate through all subsets of neighbors, starting with the largest
-        for (int i = this.neighbors.size(); i >= 1; i--) {
-            for (Set<Node<T>> subset : combinations(this.neighbors.keySet(), i)) {
-                Set<Node<T>> potentialGraph = new HashSet<>(subset);
-                potentialGraph.add(this); // include the starting node.
-
-                if (isFullyConnected(potentialGraph)) {
-                    // No need to look for smaller subsets once we have found a full graph.
-                    return potentialGraph;
-                }
-            }
-        }
-
-        return largestGraph; // Return empty set if no fully connected graph is found.
-    }
-
-    private boolean isFullyConnected(Set<Node<T>> nodes) {
-        return nodes.stream().allMatch(node -> node.isConnectedToAll(nodes));
-    }
-
-    private static <T> Set<Set<T>> combinations(Set<T> set, int k) {
-        Set<Set<T>> result = new HashSet<>();
-        if (k == 0) {
-            result.add(new HashSet<>());
-            return result;
-        }
-        if (k > set.size()) {
-            return result;
-        }
-
-        List<T> list = new ArrayList<>(set);
-        for (int i = 0; i < list.size(); i++) {
-            T element = list.get(i);
-            Set<T> rest = new HashSet<>(list.subList(i + 1, list.size()));
-            for (Set<T> subset : combinations(rest, k - 1)) {
-                subset.add(element);
-                result.add(subset);
-            }
-        }
-        return result;
-    }
-*/
 
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -5,6 +5,8 @@ import aoc.util.PuzzleApp;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public class Day23 extends PuzzleApp {
@@ -48,23 +50,25 @@ public class Day23 extends PuzzleApp {
     }
 
     public void results() {
-        // triples.stream().filter(t -> t.getLeft().startsWith("t") || t.getMiddle().startsWith("t") || t.getRight().startsWith("t"))
-        //         .forEach(System.out::println);
+        // triples.stream().filter(t -> t.getLeft().startsWith("t") || t.getMiddle().startsWith("t") || t.getRight().startsWith("t")).forEach(System.out::println);
 
         System.out.println("Day 23 part 1 results: " +
                 triples.stream().filter(t -> t.getLeft().startsWith("t") || t.getMiddle().startsWith("t") || t.getRight().startsWith("t")).count());
     }
 
     private Set<Node<String>> findLargestFullyConnectedNodes(Collection<Node<String>> nodes) {
-        final Set<Node<String>> largestCollection = new HashSet<>();
+        final ConcurrentMap<Node<String>,Set<Node<String>>> results = new ConcurrentHashMap<>();
 
-        nodes.forEach( n -> {
+        nodes.parallelStream().forEach( n -> {
+            System.out.println("Examining " + n.getValue());
             List<Node<String>> clique = new ArrayList<>();
-            n.findCliques(clique, largestCollection.size(), largestCollection);
-            // System.out.println("After examining " + n.getValue() + ", largest collection is " + largestCollection);
+            Set<Node<String>> largestClique = new HashSet<>();
+            n.findCliques(clique, 0, largestClique);
+            System.out.println("After examining " + n.getValue() + ", largest clique is " + largestClique);
+            results.put(n, largestClique);
         });
 
-        return largestCollection;
+        return results.values().stream().max(Comparator.comparingInt(Set::size)).get();
     }
 
     public void processPartTwo() {
