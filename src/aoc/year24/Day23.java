@@ -51,6 +51,9 @@ public class Day23 extends PuzzleApp {
     }
 
     public void results() {
+        System.out.println("There are " + computers.size() + " computers in our data set, with "
+                + computers.values().stream().mapToInt(n -> n.neighbors().size()).sum() + " connections.");
+
         // triples.stream().filter(t -> t.getLeft().startsWith("t") || t.getMiddle().startsWith("t") || t.getRight().startsWith("t")).forEach(System.out::println);
 
         System.out.println("Day 23 part 1 results: " +
