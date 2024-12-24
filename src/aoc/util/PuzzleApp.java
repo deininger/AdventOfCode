@@ -37,7 +37,7 @@ public abstract class PuzzleApp implements Runnable {
 		}
 	}
 
-	public void parseLine(String line) {
+	public void parseLine(String line) throws IOException {
 		System.out.println("Reading line '" + line + "'");
 	}
 	
