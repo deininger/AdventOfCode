@@ -2,19 +2,22 @@ package aoc.util;
 
 import java.util.*;
 
+/*
+ * I adapted this code from https://github.com/liziliao/Bron-Kerbosch/blob/master/Bron-Kerbosch.java
+ * to use a Map of Nodes instead of a Graph. The Map provides a convenient lookup of Node by its name (V),
+ * and each Node holds a Map of its neighbors, which is used to determine adjacency.
+ *
+ * The purpose of this agorithm is to efficiently find the maximal cliques of the graph (set of Nodes).
+ * A "clique" is a set of Nodes which are all neighbors of each other.
+ */
 public class BronKerbosch<V> {
-    //~ Instance fields --------------------------------------------------------
 
     private final Map<V, Node<V>> nodes;
     private Collection<Set<V>> cliques;
 
-    //~ Constructors -----------------------------------------------------------
-
     public BronKerbosch(Map<V, Node<V>> nodes) {
         this.nodes = nodes;
     }
-
-    //~ Methods ----------------------------------------------------------------
 
     private boolean areNeighbors(V v1, V v2) {
         return nodes.get(v1).neighbors().containsKey(nodes.get(v2));
@@ -85,35 +88,35 @@ public class BronKerbosch<V> {
                 for (V new_candidate : candidates) {
                     if (areNeighbors(candidate, new_candidate)) {
                         new_candidates.add(new_candidate);
-                    } // of if
-                } // of for
+                    }
+                }
 
                 // create new_already_found by removing nodes in already_found
                 // not connected to candidate node
                 for (V new_found : already_found) {
                     if (areNeighbors(candidate, new_found)) {
                         new_already_found.add(new_found);
-                    } // of if
-                } // of for
+                    }
+                }
 
                 // if new_candidates and new_already_found are empty
                 if (new_candidates.isEmpty() && new_already_found.isEmpty()) {
                     // potential_clique is maximal_clique
                     cliques.add(new HashSet<>(potential_clique));
-                } // of if
+                }
                 else {
                     // recursive call
                     findCliques(
                             potential_clique,
                             new_candidates,
                             new_already_found);
-                } // of else
+                }
 
                 // move candidate_node from potential_clique to already_found;
                 already_found.add(candidate);
                 potential_clique.remove(candidate);
-            } // of for
-        } // of if
+            }
+        }
     }
 
     private boolean end(List<V> candidates, List<V> already_found) {
@@ -125,12 +128,12 @@ public class BronKerbosch<V> {
             for (V candidate : candidates) {
                 if (areNeighbors(found, candidate)) {
                     edgecounter++;
-                } // of if
-            } // of for
+                }
+            }
             if (edgecounter == candidates.size()) {
                 end = true;
             }
-        } // of for
+        }
         return end;
     }
 }
