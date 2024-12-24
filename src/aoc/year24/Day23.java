@@ -1,5 +1,6 @@
 package aoc.year24;
 
+import aoc.util.BronKerbosch;
 import aoc.util.Node;
 import aoc.util.PuzzleApp;
 import org.apache.commons.lang3.tuple.Triple;
@@ -72,10 +73,18 @@ public class Day23 extends PuzzleApp {
     }
 
     public void processPartTwo() {
+        BronKerbosch<String> alorithm = new BronKerbosch<>(computers);
+        Collection<Set<String>> cliques = alorithm.getBiggestMaximalCliques();
+        if (cliques.size() != 1) {
+            System.out.println("Found " + cliques.size() + " answers???");
+        } else {
+            Set<String> clique = cliques.stream().findFirst().get();
+            System.out.println("Maximal clique: " + clique.stream().sorted().collect(Collectors.joining(",")));
+        }
     }
 
     public void resultsPartTwo() {
-        Set<Node<String>> largestFullyConnectedNodes = findLargestFullyConnectedNodes(computers.values());
-        System.out.println(largestFullyConnectedNodes.stream().map(Node::getValue).sorted().collect(Collectors.joining(",")));
+        // Set<Node<String>> largestFullyConnectedNodes = findLargestFullyConnectedNodes(computers.values());
+        // System.out.println(largestFullyConnectedNodes.stream().map(Node::getValue).sorted().collect(Collectors.joining(",")));
     }
 }
