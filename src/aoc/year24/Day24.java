@@ -22,6 +22,8 @@ public class Day24 extends PuzzleApp {
     private long y = 0;
     private final MutablePair<Long,Long> z = MutablePair.of(0L, 0L); // right-side of Pair tracks which bits of z are still unknown (1 = unknown)
     private final List<Gate> gates = new ArrayList<>();
+    private final Map<String,Gate> zGates = new HashMap<>();
+    private final Map<String,Gate> intermediateGates = new HashMap<>();
 
     public void parseLine(String line) throws IOException {
         if (! line.isEmpty()) {
@@ -37,10 +39,13 @@ public class Day24 extends PuzzleApp {
             } else if (line.contains("->")) {
                 String[] parts = line.split(" ");
                 if (parts[3].equals("->")) {
-                    gates.add(new Gate(gates.size(), parts[0], parts[1], parts[2], parts[4]));
+                    Gate g = new Gate(gates.size(), parts[0], parts[1], parts[2], parts[4]);
+                    gates.add(g);
                     if (parts[4].startsWith("z")) {
-                        // wires.putIfAbsent(parts[4], null); // need this for now to track which z values we haven't determine yet.
                         z.setRight(z.getRight() | 1L << (Integer.parseInt(parts[4].substring(1)))); // Set the "unknown" bit for this z
+                        zGates.put(g.getOutputName(),g);
+                    } else {
+                        intermediateGates.put(g.getOutputName(),g);
                     }
                 } else {
                     throw new IOException("Unable to parse " + line);
@@ -179,17 +184,17 @@ public class Day24 extends PuzzleApp {
             goodGates.addAll(passingGate.allInputGates(gateMap));
         }
 
-        String failingGateName = "z" + (bit < 10 ? "0" : "") + bit;
-        Gate failingGate = gateMap.get(failingGateName);
+        if (!passing) {
+            String failingGateName = "z" + (bit < 10 ? "0" : "") + bit;
+            Gate failingGate = gateMap.get(failingGateName);
 
-        if (!quiet) System.out.println("FAILED tests for bit " + bit + ": " + failingGate.fullInputString(gateMap));
+            if (!quiet) System.out.println("FAILED tests for bit " + bit + ": " + failingGate.fullInputString(gateMap));
+        }
 
         return bit;
     }
 
-    public void processPartTwo() {
-        Map<String,Gate> gateMap = new HashMap<>();
-        gates.forEach(g -> gateMap.put(g.getOutputName(), g));
+    private void bigTest(Map<String,Gate> gateMap) {
         Set<Gate> goodGates = new HashSet<>();
 
         int failingBit = testBits(gateMap, goodGates, false);
@@ -200,7 +205,9 @@ public class Day24 extends PuzzleApp {
         Set<Gate> allFailingGates = failingGate.allInputGates(gateMap);
 
         // Try swapping with any of the intermediate gates:
+/*
         System.out.println("Gate-swapping over " + allFailingGates.size() + " * " + (gates.size() - goodGates.size()) + " gates");
+
         int i = 0, j = 0;
         for (Gate g1: allFailingGates) {
             System.out.println("    " + (++i));
@@ -219,6 +226,117 @@ public class Day24 extends PuzzleApp {
                 swapOutputs(g1, g2, gateMap); // Swap back
             }
         }
+        */
+    }
+
+    private void gateAnalysis(Map<String,Gate> gateMap) {
+        zGates.keySet().stream().sorted().forEach( k -> {
+            Gate g = gateMap.get(k);
+            System.out.println( "Analyzing gate " + g);
+
+            if (!g.getOperator().equals(Gate.XOR)) {
+                System.out.println("Gate " + k + " doesn't start with XOR!");
+
+                // Can we find the appropriate XOR somewhere?
+
+                intermediateGates.forEach( (k2,g2) -> {
+                    if (g2.getOperator().equals(Gate.XOR)) {
+                        Gate one = gateMap.get(g2.getInputOneName());
+                        Gate two = gateMap.get(g2.getInputTwoName());
+                        if (one != null && one.getOperator().equals(Gate.XOR)
+                                && ((one.getInputOneName().startsWith("x") && one.getInputTwoName().startsWith("y"))
+                                || (one.getInputOneName().startsWith("y") && one.getInputTwoName().startsWith("x")))) {
+                            System.out.println("  Consider substituting " + g2 + " which has child " + one);
+                        }
+                        if (two != null && two.getOperator().equals(Gate.XOR)
+                                && ((two.getInputOneName().startsWith("x") && two.getInputTwoName().startsWith("y"))
+                                || (two.getInputOneName().startsWith("y") && two.getInputTwoName().startsWith("x")))) {
+                            System.out.println("  Consider substituting " + g2 + " which has child " + two);
+                        }
+                    }
+                });
+            } else {
+                System.out.println("  Checking for alternating ORs and ANDs...");
+
+                if (g.id() == 124) {
+                    System.out.println(g.fullInputString(gateMap));
+                }
+
+                // Ok we are starting with an XOR, let's check both sides
+                Gate one = gateMap.get(g.getInputOneName());
+                Gate two = gateMap.get(g.getInputTwoName());
+
+                if (one != null && one.getOperator().equals(Gate.XOR)
+                        && ((one.getInputOneName().startsWith("x") && one.getInputTwoName().startsWith("y"))
+                        || (one.getInputOneName().startsWith("y") && one.getInputTwoName().startsWith("x")))) {
+                    System.out.println("  Input One is XOR of x and y: " + one + ", checking other side...");
+
+                    // Look for alternating ANDs and ORs...
+                    String expecting = Gate.OR;
+
+                    while (two != null) {
+                        if (((two.getInputOneName().startsWith("x") && two.getInputTwoName().startsWith("y"))
+                                || (two.getInputOneName().startsWith("y") && two.getInputTwoName().startsWith("x")))) {
+                            break; // Stop when we encounter a Gate with x and y inputs
+                        }
+
+                        if (! two.getOperator().equals(expecting)) {
+                            System.out.println("    Input Two should be " + expecting + " but is " + two);
+                            break;
+                        }
+
+                        // Go "down" the side which doesn't have x and y inputs
+                        Gate gg = gateMap.get(two.getInputOneName());
+
+                        if (gg.getInputOneName().startsWith("x") || gg.getInputOneName().startsWith("y")) {
+                            gg = gateMap.get(two.getInputTwoName());
+                        }
+
+                        two = gg;
+                        expecting = (expecting.equals(Gate.OR)) ? Gate.AND : Gate.OR;
+                    }
+
+                } else if (two != null && two.getOperator().equals(Gate.XOR)
+                        && ((two.getInputOneName().startsWith("x") && two.getInputTwoName().startsWith("y"))
+                        || (two.getInputOneName().startsWith("y") && two.getInputTwoName().startsWith("x")))) {
+                    System.out.println("  Input Two is XOR of x and y: " + two + ", checking other side...");
+
+                    // Look for alternating ANDs and ORs...
+                    String expecting = Gate.OR;
+
+                    while (one != null) {
+                        if (((one.getInputOneName().startsWith("x") && one.getInputTwoName().startsWith("y"))
+                                || (one.getInputOneName().startsWith("y") && one.getInputTwoName().startsWith("x")))) {
+                            break; // Stop when we encounter a Gate with x and y inputs
+                        }
+
+                        if (! one.getOperator().equals(expecting)) {
+                            System.out.println("    Input One should be " + expecting + " but is " + two);
+                            break;
+                        }
+
+                        // Go "down" the side which doesn't have x and y inputs
+                        Gate gg = gateMap.get(one.getInputOneName());
+
+                        if (gg.getInputOneName().startsWith("x") || gg.getInputOneName().startsWith("y")) {
+                            gg = gateMap.get(one.getInputTwoName());
+                        }
+
+                        one = gg;
+                        expecting = (expecting.equals(Gate.OR)) ? Gate.AND : Gate.OR;
+                    }
+                }
+            }
+        });
+    }
+
+    public void processPartTwo() {
+        Map<String,Gate> gateMap = new HashMap<>();
+        gates.forEach(g -> gateMap.put(g.getOutputName(), g));
+
+        // gateAnalysis(gateMap);
+
+        bigTest(gateMap);
     }
 
     // Swapping:
@@ -319,9 +437,9 @@ public class Day24 extends PuzzleApp {
     }
 
     static final class Gate {
-        private static final String AND = "AND";
-        private static final String OR = "OR";
-        private static final String XOR = "XOR";
+        public static final String AND = "AND";
+        public static final String OR = "OR";
+        public static final String XOR = "XOR";
 
         private final int id;
         private final String inputOne;
@@ -335,6 +453,10 @@ public class Day24 extends PuzzleApp {
             this.operator = operator;
             this.inputTwo = inputTwo;
             this.output = output;
+        }
+
+        public int id() {
+            return id;
         }
 
         /*
@@ -354,6 +476,10 @@ public class Day24 extends PuzzleApp {
 
         public String getInputTwoName() {
             return inputTwo;
+        }
+
+        public String getOperator() {
+            return operator;
         }
 
         private Boolean getInput(String inputName, long x, long y, Map<String,Boolean> wires) {
