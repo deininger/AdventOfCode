@@ -14,7 +14,7 @@ public class Day24 extends PuzzleApp {
     }
 
     public String filename() {
-        return "data/year24/day24";
+        return "data/year24/day24-fixed";
     }
 
     private final Map<String,Boolean> wires = new HashMap<>();
@@ -39,7 +39,7 @@ public class Day24 extends PuzzleApp {
                 if (parts[3].equals("->")) {
                     gates.add(new Gate(gates.size(), parts[0], parts[1], parts[2], parts[4]));
                     if (parts[4].startsWith("z")) {
-                        wires.putIfAbsent(parts[4], null); // need this for now to track which z values we haven't determine yet.
+                        // wires.putIfAbsent(parts[4], null); // need this for now to track which z values we haven't determine yet.
                         z.setRight(z.getRight() | 1L << (Integer.parseInt(parts[4].substring(1)))); // Set the "unknown" bit for this z
                     }
                 } else {
@@ -104,12 +104,6 @@ public class Day24 extends PuzzleApp {
     // "larger" result should be 0011111101000 (2024) with inputs 13 and 31
     // my puzzle input result should be 1100100010000001101111100100101110001011001110 (55114892239566)
 
-    private boolean run(Collection<Gate> lgates, long lx, long ly, MutablePair<Long,Long> lz) {
-        while (lz.getRight() > 0) {
-            lgates.forEach(g -> g.operate(lx, ly, lz, wires));
-        }
-        return lz.getLeft() == (lx + ly);
-    }
 
     /*
      * This ought to be done just once...
@@ -125,24 +119,116 @@ public class Day24 extends PuzzleApp {
         return result;
     }
 
-    private boolean test(Collection<Gate> lgates, long x, long y) {
-        MutablePair<Long,Long> p = MutablePair.of(0L, allZUnknown(lgates));
-        return run(lgates, x, y, p);
-        // System.out.println("Testing " + x + "+" + y + "=" + (x+y) + ": " + result + " (" + p.getLeft() + ")");
-    }
-
     private boolean passingAllTests(Collection<Gate> lgates) {
-        return test(lgates,0,0)
-            && test(lgates,1,1)
-            && test(gates,allZUnknown(lgates) >> 1, allZUnknown(lgates) >> 1);
+        return test(lgates,0,0, allZUnknown(lgates))
+                && test(lgates,1,1, allZUnknown(lgates))
+                && test(lgates,allZUnknown(lgates) >> 1, allZUnknown(lgates) >> 1, allZUnknown(lgates));
     }
 
-    private void swapOutputs(Gate g1, Gate g1s) {
+    private void swapOutputs(Gate g1, Gate g1s, Map<String,Gate> gateMap) {
         String tout = g1.getOutputName();
         g1.setNewOutputName(g1s.getOutputName());
         g1s.setNewOutputName(tout);
+        // Add them back into the gateMap to fix the mappings!
+        gateMap.put(g1.getOutputName(), g1);
+        gateMap.put(g1s.getOutputName(), g1s);
     }
 
+    private long run(Collection<Gate> lgates, Map<String,Boolean> lwires, long lx, long ly, MutablePair<Long,Long> lz) {
+        while (lz.getRight() > 0) {
+            lgates.forEach(g -> g.operate(lx, ly, lz, lwires));
+        }
+        return lz.getLeft();
+    }
+
+    private boolean test(Collection<Gate> lgates, long x, long y, long mask) {
+        MutablePair<Long,Long> p = MutablePair.of(0L, mask); // allZUnknown(lgates);
+        Map<String,Boolean> lwires = new HashMap<>();
+        long result = run(lgates, lwires, x, y, p);
+        boolean correct = ((result & mask) == (x+y));
+        // System.out.println("Testing " + x + "+" + y + "=" + (x+y) + ": " + (result & mask) + " == " + (x+y));
+        return correct;
+    }
+
+    private int testBits(Map<String,Gate> gateMap, Set<Gate> goodGates, boolean quiet) {
+        boolean passing = true;
+        int bit;
+
+        for (bit = 0; bit < 44; bit++) {
+            long value = 1L << bit;
+            long mask = (1L << (bit+1)) - 1;
+
+            if (!quiet) System.out.println("Testing bit " + bit + " (" + Long.toString(value, 2)
+                    + ") with mask " + Long.toString(mask,2) + "...");
+
+            passing = test(gates, 0L, 0L, mask);
+            if (!passing) break;
+            passing = test(gates, value, 0, mask);
+            if (!passing) break;
+            passing = test(gates, 0L, value, mask);
+            if (!passing) break;
+            if (bit > 0) { // test "carry" works
+                passing = test(gates, value/2, value/2, mask);
+                if (!passing) break;
+            }
+
+            Gate passingGate = gateMap.get("z" + (bit < 10 ? "0" : "") + bit);
+
+            if (!quiet) System.out.println("Passed tests for bit " + bit + ": " + passingGate.fullInputString(gateMap));
+
+            goodGates.addAll(passingGate.allInputGates(gateMap));
+        }
+
+        String failingGateName = "z" + (bit < 10 ? "0" : "") + bit;
+        Gate failingGate = gateMap.get(failingGateName);
+
+        if (!quiet) System.out.println("FAILED tests for bit " + bit + ": " + failingGate.fullInputString(gateMap));
+
+        return bit;
+    }
+
+    public void processPartTwo() {
+        Map<String,Gate> gateMap = new HashMap<>();
+        gates.forEach(g -> gateMap.put(g.getOutputName(), g));
+        Set<Gate> goodGates = new HashSet<>();
+
+        int failingBit = testBits(gateMap, goodGates, false);
+
+        String failingGateName = "z" + (failingBit < 10 ? "0" : "") + failingBit;
+        Gate failingGate = gateMap.get(failingGateName);
+
+        Set<Gate> allFailingGates = failingGate.allInputGates(gateMap);
+
+        // Try swapping with any of the intermediate gates:
+        System.out.println("Gate-swapping over " + allFailingGates.size() + " * " + (gates.size() - goodGates.size()) + " gates");
+        int i = 0, j = 0;
+        for (Gate g1: allFailingGates) {
+            System.out.println("    " + (++i));
+            for (Gate g2 : gates) {
+                if (goodGates.contains(g2)) continue;
+                System.out.println("        " + (++j));
+
+                swapOutputs(g1, g2, gateMap);
+
+                int newFailingBit = testBits(gateMap, goodGates, true);
+                if (newFailingBit > failingBit) {
+                    System.out.println("It got better when we swapped " + failingGate + " for " + g2 + "!");
+                    System.out.println("Old failing bit = " + failingBit + ", new failing bit = " + newFailingBit);
+                }
+
+                swapOutputs(g1, g2, gateMap); // Swap back
+            }
+        }
+    }
+
+    // Swapping:
+    // line 101: ghk XOR pnr -> z09
+    // line 171: y08 AND x08 -> z08
+
+
+
+
+    /*
     public void processPartTwo() {
         // Try all combinations of swapping 4 gates!
 
@@ -226,6 +312,7 @@ public class Day24 extends PuzzleApp {
 
         System.out.println("Did not find any cobminations of swaps which passed all tests.");
     }
+*/
 
     public void resultsPartTwo() {
         System.out.println("Day 24 part 2 results: ");
@@ -259,6 +346,14 @@ public class Day24 extends PuzzleApp {
 
         public String getOutputName() {
             return output;
+        }
+
+        public String getInputOneName() {
+            return inputOne;
+        }
+
+        public String getInputTwoName() {
+            return inputTwo;
         }
 
         private Boolean getInput(String inputName, long x, long y, Map<String,Boolean> wires) {
@@ -313,6 +408,38 @@ public class Day24 extends PuzzleApp {
 
         public String toString() {
             return id + ": " + inputOne + " " + operator + " " + inputTwo + " -> " + output;
+        }
+
+        public String fullInputString(Map<String,Gate> gateMap) {
+            StringBuilder sb = new StringBuilder();
+            if (inputOne.startsWith("x") || inputOne.startsWith("y")) {
+                sb.append(inputOne);
+            } else {
+                sb.append(inputOne).append("[");
+                sb.append(gateMap.get(inputOne).fullInputString(gateMap));
+                sb.append("]");
+            }
+            sb.append(" ");
+            sb.append(operator);
+            sb.append(" ");
+            if (inputTwo.startsWith("x") || inputTwo.startsWith("y")) {
+                sb.append(inputTwo);
+            } else {
+                sb.append(inputTwo).append("[");
+                sb.append(gateMap.get(inputTwo).fullInputString(gateMap));
+                sb.append("]");
+            }
+            return sb.toString();
+        }
+
+        public Set<Gate> allInputGates(Map<String,Gate> gateMap) {
+            Set<Gate> gates = new HashSet<>();
+            gates.add(this);
+            Gate inOne = gateMap.get(inputOne);
+            if (inOne != null) gates.addAll(inOne.allInputGates(gateMap));
+            Gate inTwo = gateMap.get(inputTwo);
+            if (inTwo != null) gates.addAll(inTwo.allInputGates(gateMap));
+            return gates;
         }
     }
 }
