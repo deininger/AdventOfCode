@@ -74,6 +74,15 @@ public class Day25 extends PuzzleApp {
             return lines.getLast().equals("#####");
         }
 
+        /**
+         * Determines if the current KeyLock object "fits" with another given KeyLock object.
+         * A KeyLock object is considered to fit with another if one is a key and the other is a lock,
+         * they have the same width, and the sum of their heights for any given column does not
+         * exceed the maximum allowable height.
+         *
+         * @param other the KeyLock object to test for compatibility with the current object
+         * @return true if the current KeyLock object fits with the given KeyLock object, false otherwise
+         */
         public boolean isFit(KeyLock other) {
             if ((this.isKey() && other.isKey()) || (this.isLock() && other.isLock())) return false;
             if (this.width != other.width) return false;
@@ -88,6 +97,14 @@ public class Day25 extends PuzzleApp {
             return true;
         }
 
+        /**
+         * Calculates the "heights" for each column of the structure based on its current state
+         * (lock or key). The height of a column is determined by the count of consecutive `#`
+         * characters starting from either the first row (if it's a lock) or the bottom row
+         * (if it's a key).
+         *
+         * @return a list of integers representing the height of each column in the structure.
+         */
         public List<Integer> heights() {
             List<Integer> heights = new ArrayList<>(width);
 

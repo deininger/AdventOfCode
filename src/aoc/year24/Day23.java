@@ -1,6 +1,5 @@
 package aoc.year24;
 
-import aoc.util.BronKerbosch;
 import aoc.util.Node;
 import aoc.util.PuzzleApp;
 import org.apache.commons.lang3.tuple.Triple;
@@ -60,34 +59,26 @@ public class Day23 extends PuzzleApp {
                 triples.stream().filter(t -> t.getLeft().startsWith("t") || t.getMiddle().startsWith("t") || t.getRight().startsWith("t")).count());
     }
 
-    private Set<Node<String>> findLargestFullyConnectedNodes(Collection<Node<String>> nodes) {
-        final ConcurrentMap<Node<String>,Set<Node<String>>> results = new ConcurrentHashMap<>();
+    private Collection<Node<String>> findLargestFullyConnectedNodes(Collection<Node<String>> nodes) {
+        final ConcurrentMap<Node<String>,Collection<Node<String>>> results = new ConcurrentHashMap<>();
 
         nodes.parallelStream().forEach( n -> {
-            System.out.println("Examining " + n.getValue());
-            List<Node<String>> clique = new ArrayList<>();
-            Set<Node<String>> largestClique = new HashSet<>();
-            n.findCliques(clique, 0, largestClique);
-            System.out.println("After examining " + n.getValue() + ", largest clique is " + largestClique);
-            results.put(n, largestClique);
+            // System.out.println("Examining " + n.getValue());
+            Collection<Node<String>> clique = n.maximalClique();
+            // System.out.println("After examining " + n.getValue() + ", largest clique is " + clique);
+            results.put(n, clique);
         });
 
-        return results.values().stream().max(Comparator.comparingInt(Set::size)).get();
+        return results.values().stream().max(Comparator.comparingInt(Collection::size)).orElse(Collections.emptySet());
     }
 
     public void processPartTwo() {
-        BronKerbosch<String> alorithm = new BronKerbosch<>(computers);
-        Collection<Set<String>> cliques = alorithm.getBiggestMaximalCliques();
-        if (cliques.size() != 1) {
-            System.out.println("Found " + cliques.size() + " answers???");
-        } else {
-            Set<String> clique = cliques.stream().findFirst().get();
-            System.out.println("Maximal clique: " + clique.stream().sorted().collect(Collectors.joining(",")));
-        }
+        // BronKerbosch<String> alorithm = new BronKerbosch<>(computers);
+        // Collection<Set<String>> cliques = alorithm.getBiggestMaximalCliques();
     }
 
     public void resultsPartTwo() {
-        // Set<Node<String>> largestFullyConnectedNodes = findLargestFullyConnectedNodes(computers.values());
-        // System.out.println(largestFullyConnectedNodes.stream().map(Node::getValue).sorted().collect(Collectors.joining(",")));
+        Collection<Node<String>> clique = findLargestFullyConnectedNodes(computers.values());
+        System.out.println("Maximal clique: " + clique.stream().map(Node::getValue).sorted().collect(Collectors.joining(",")));
     }
 }

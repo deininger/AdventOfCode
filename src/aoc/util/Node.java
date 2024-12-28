@@ -53,19 +53,62 @@ public class Node<T> implements Comparable<Object> {
         return nodes.stream().allMatch(this::isConnectedTo);
     }
 
-    public void findCliques(Collection<Node<T>> clique, int maxCliqueSize, Collection<Node<T>> largestClique) {
-        for (Node<T> n : neighbors.keySet()) {
-            if (!clique.contains(n) && n.isConnectedToAll(clique)) {
-                Set<Node<T>> newClique = new HashSet<>(clique);
-                newClique.add(n);
+    public Collection<Node<T>> maximalClique() {
+        Collection<Node<T>> potentialCliques = new HashSet<>(Set.of(this));
+        Collection<Node<T>> candidates = new HashSet<>(neighbors.keySet());
+        Collection<Node<T>> visited = new HashSet<>();
+        Collection<Collection<Node<T>>> cliques = new HashSet<>();
 
-                if (newClique.size() > maxCliqueSize) {
-                    maxCliqueSize = newClique.size();
-                    largestClique.clear();
-                    largestClique.addAll(newClique);
+        findCliquesRecursively(potentialCliques, candidates, visited, cliques);
+        return cliques.stream().max(Comparator.comparingInt(Collection::size)).orElse(Collections.emptySet());
+    }
+
+    private void findCliquesRecursively(Collection<Node<T>> potentialCliques, Collection<Node<T>> candidates, Collection<Node<T>> visited, Collection<Collection<Node<T>>> cliques) {
+        List<Node<T>> candidates_array = new ArrayList<>(candidates);
+        boolean end = visited.stream().anyMatch(found -> found.isConnectedToAll(candidates));
+        if (!end) {
+            // for each candidate_node in candidates do
+            for (Node<T> candidate : candidates_array) {
+                Set<Node<T>> new_candidates = new HashSet<>();
+                Set<Node<T>> new_already_found = new HashSet<>();
+
+                // move candidate node to potential_clique
+                potentialCliques.add(candidate);
+                candidates.remove(candidate);
+
+                // create new_candidates by removing nodes in candidates not
+                // connected to candidate node
+                for (Node<T> new_candidate : candidates) {
+                    if (candidate.isConnectedTo(new_candidate)) {
+                        new_candidates.add(new_candidate);
+                    }
                 }
 
-                n.findCliques(newClique, maxCliqueSize, largestClique);
+                // create new_already_found by removing nodes in already_found
+                // not connected to candidate node
+                for (Node<T> new_found : visited) {
+                    if (candidate.isConnectedTo(new_found)) {
+                        new_already_found.add(new_found);
+                    }
+                }
+
+                // if new_candidates and new_already_found are empty
+                if (new_candidates.isEmpty() && new_already_found.isEmpty()) {
+                    // potential_clique is maximal_clique
+                    cliques.add(new HashSet<>(potentialCliques));
+                }
+                else {
+                    // recursive call
+                    findCliquesRecursively(
+                            potentialCliques,
+                            new_candidates,
+                            new_already_found,
+                            cliques);
+                }
+
+                // move candidate_node from potential_clique to already_found;
+                visited.add(candidate);
+                potentialCliques.remove(candidate);
             }
         }
     }
