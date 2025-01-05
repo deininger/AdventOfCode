@@ -14,7 +14,7 @@ public class Day24 extends PuzzleApp {
     }
 
     public String filename() {
-        return "data/year24/day24-fixed";
+        return "data/year24/day24";
     }
 
     private final Map<String,Boolean> wires = new HashMap<>();
@@ -155,6 +155,18 @@ public class Day24 extends PuzzleApp {
         return correct;
     }
 
+    /**
+     * Tests individual bits of a circuit's functionality by iterating through a series
+     * of logical tests, starting from the least significant bit. This method ensures that
+     * the gates in the provided gate map produce correct outputs under various input scenarios.
+     * If a bit test fails, the process stops, and the index of the failing bit is returned.
+     *
+     * @param gateMap a map containing the circuit's gates with their names as keys and their
+     *                corresponding {@code Gate} instances as values
+     * @param goodGates a set to collect all gates that contribute to passing bit tests
+     * @param quiet a boolean flag indicating whether to suppress verbose output
+     * @return the index of the first failing bit or 44 if all bits pass successfully
+     */
     private int testBits(Map<String,Gate> gateMap, Set<Gate> goodGates, boolean quiet) {
         boolean passing = true;
         int bit;
@@ -334,9 +346,9 @@ public class Day24 extends PuzzleApp {
         Map<String,Gate> gateMap = new HashMap<>();
         gates.forEach(g -> gateMap.put(g.getOutputName(), g));
 
-        // gateAnalysis(gateMap);
+        gateAnalysis(gateMap);
 
-        bigTest(gateMap);
+        // bigTest(gateMap);
     }
 
     // Swapping:
