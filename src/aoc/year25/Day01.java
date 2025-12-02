@@ -33,7 +33,7 @@ public class Day01 extends PuzzleApp {
         System.out.println("The dial is now at " + dial);
     }
 
-    private class Rotation {
+    public static class Rotation {
         private final Direction d;
         private final int tickCount;
 
@@ -69,7 +69,7 @@ public class Day01 extends PuzzleApp {
         }
     }
 
-    private class Dial {
+    public static class Dial {
         private static final int SIZE = 100;
 
         private int position;
@@ -82,6 +82,10 @@ public class Day01 extends PuzzleApp {
 
         public Dial(int startingPosition) {
             this.position = startingPosition;
+        }
+
+        public int partTwoZeroCounter() {
+            return partTwoZeroCounter;
         }
 
         public String toString() {
