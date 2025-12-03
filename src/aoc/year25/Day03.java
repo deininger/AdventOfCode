@@ -22,7 +22,6 @@ public class Day03 extends PuzzleApp {
     @Override
     public void parseLine(String line) {
         banks.add(line);
-
     }
 
     private long joltage(String bank, int digits) {
@@ -40,10 +39,7 @@ public class Day03 extends PuzzleApp {
             }
         }
 
-        // System.out.println("Largest digit: " + largestDigit + " at position " + positionOfLargestDigit + " in " + bank + " with digits " + digits);
-
         // Use recursion to find the largest digit in the remainder of the string:
-
         return largestDigit * (long)Math.pow(10,digits-1) + joltage(bank.substring(positionOfLargestDigit + 1), digits - 1);
     }
 
