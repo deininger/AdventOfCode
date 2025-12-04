@@ -96,6 +96,13 @@ public class Loc {
 		return Stream.of(new Loc(x, y + 1), new Loc(x + 1, y), new Loc(x - 1, y), new Loc(x, y - 1));
 	}
 
+    public Stream<Loc> adjacentWithDiagonals() {
+        return Stream.of(new Loc(x - 1, y -1), new Loc(x - 1, y), new Loc(x - 1, y + 1),
+                new Loc(x, y - 1), new Loc(x, y + 1),
+                new Loc(x + 1, y - 1), new Loc(x + 1, y), new Loc(x + 1, y + 1)
+                );
+    }
+
 	/*
 	 * Builds a stream of Locs which are all "distance" away from this Loc,
 	 * using the manhattan distance.
