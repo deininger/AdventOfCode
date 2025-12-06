@@ -24,4 +24,13 @@ public enum Operator {
     public String toString() {
         return Character.toString(symbol);
     }
+
+    public Long apply(Long a, Long b) {
+        return switch (this) {
+            case PLUS -> a + b;
+            case MINUS -> a - b;
+            case DIVIDE -> a / b;
+            case TIMES -> a * b;
+        };
+    }
 }
