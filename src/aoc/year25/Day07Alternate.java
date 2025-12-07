@@ -66,7 +66,6 @@ public class Day07Alternate extends PuzzleApp {
                 // split the beam in two, left and right, each inherits the timelines of the original beam
                 // we don't have to worry about encountering another splitter when we split,
                 // or exiting the grid when splitting.
-
                 track(beam.move(Direction.LEFT), beamPaths.get(orig));
                 track(beam.move(Direction.RIGHT), beamPaths.get(orig));
             } else {
