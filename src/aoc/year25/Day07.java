@@ -25,7 +25,7 @@ public class Day07 extends PuzzleApp {
 
     private long splitCounter;
     private final Queue<Loc> activeBeams = new LinkedList<>();
-    private final Set<Loc> beamPaths = new HashSet<>(); // This is my "seen positions" set
+    private final Set<Loc> beamPaths = new HashSet<>(); // This is my "seen locations" set
 
     private void track(Loc beam) {
         if (!beamPaths.contains(beam)) {
