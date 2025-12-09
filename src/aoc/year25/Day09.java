@@ -51,11 +51,11 @@ public class Day09 extends PuzzleApp {
 
     private final Map<Loc,Boolean> cache = new HashMap<>();
 
-    private boolean cachedPointWithinRedTilesPolygon(Loc l) {
+    private boolean cachedPointOutsideRedTilesPolygon(Loc l) {
         if (cache.containsKey(l)) return cache.get(l);
         boolean result = l.within(redTiles);
         cache.put(l, result);
-        return result;
+        return !result;
     }
 
     private long partTwoLargestArea = 0;
@@ -66,19 +66,36 @@ public class Day09 extends PuzzleApp {
             System.out.println("..." + (redTiles.indexOf(tile1) + 1) + "/" + redTiles.size());
 
             for (Loc tile2 : redTiles) {
-                System.out.println("......" + (redTiles.indexOf(tile2) + 1) + "/" + redTiles.size());
+                // System.out.println("......" + (redTiles.indexOf(tile2) + 1) + "/" + redTiles.size());
 
                 long area = (Math.abs(tile2.x() - tile1.x()) + 1L) * (Math.abs(tile2.y() - tile1.y()) + 1L);
                 if (area > partTwoLargestArea) {
                     boolean allPointsWithin = true;
-                    for (int x = 1 + Math.min(tile1.x(), tile2.x()); allPointsWithin && x < Math.max(tile1.x(), tile2.x()); x++) {
-                        for (int y = 1 + Math.min(tile1.y(), tile2.y()); allPointsWithin && y < Math.max(tile1.y(), tile2.y()); y++) {
-                            Loc testPoint = new Loc(x, y);
-                            if (!cachedPointWithinRedTilesPolygon(testPoint)) {
-                                allPointsWithin = false;
-                            }
+                    // We don't actually have to check ALL the points in the rectangle, if all edges of the
+                    // rectangle are within the red/green area, then the interior will be as well
+                    int minX = Math.min(tile1.x(), tile2.x());
+                    int maxX = Math.max(tile1.x(), tile2.x());
+                    int minY = Math.min(tile1.y(), tile2.y());
+                    int maxY = Math.max(tile1.y(), tile2.y());
+
+                    // Check the top and bottom edges:
+                    for (int x = minX; allPointsWithin && x <= maxX; x++) {
+                        if (cachedPointOutsideRedTilesPolygon(new Loc(x, minY))) {
+                            allPointsWithin = false;
+                        } else if (cachedPointOutsideRedTilesPolygon(new Loc(x, maxY))) {
+                            allPointsWithin = false;
                         }
                     }
+
+                    // Check the left and right edges:
+                    for (int y = minY; allPointsWithin && y <= maxY; y++) {
+                        if (cachedPointOutsideRedTilesPolygon(new Loc(minX, y))) {
+                            allPointsWithin = false;
+                        } else if (cachedPointOutsideRedTilesPolygon(new Loc(maxX, y))) {
+                            allPointsWithin = false;
+                        }
+                    }
+
                     if (allPointsWithin) {
                         System.out.println("Rectangle at " + tile1 + " and " + tile2 + " has all points within polygon, area = " + area);
                         partTwoLargestArea = area;
