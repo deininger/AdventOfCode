@@ -193,6 +193,38 @@ public class Loc {
 		return (this.x >= upperLeftCorner.x && this.y >= upperLeftCorner.y && this.x < lowerRightCorner.x && this.y < lowerRightCorner.y);
 	}
 
+    /**
+     * Tests to see if this is within the polygon defined by the given series of corner points.
+     * This is the Ray Casting Algorithm, using (0,0) as the end of the ray.
+     */
+    public boolean within(List<Loc> polygon) {
+        int npoints = polygon.size();
+        if (npoints < 3) {
+            return false; // Not a valid polygon
+        }
+
+        int intersections = 0;
+        double testX = this.x();
+        double testY = this.y();
+
+        for (int i = 0, j = npoints - 1; i < npoints; j = i++) {
+            Loc p1 = polygon.get(i);
+            Loc p2 = polygon.get(j);
+            double p1X = p1.x();
+            double p1Y = p1.y();
+            double p2X = p2.x();
+            double p2Y = p2.y();
+
+            // Check if the ray from testPoint crosses the edge (p1, p2)
+            if (((p1Y > testY) != (p2Y > testY)) && (testX < (p2X - p1X) * (testY - p1Y) / (p2Y - p1Y) + p1X)) {
+                intersections++;
+            }
+        }
+
+        // If the number of intersections is odd, the point is inside.
+        return (intersections % 2 != 0);
+    }
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y);
