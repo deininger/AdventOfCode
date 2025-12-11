@@ -52,7 +52,7 @@ public class Day09 extends PuzzleApp {
     private final Map<Loc,Boolean> cache = new HashMap<>();
 
     private boolean cachedPointOutsideRedTilesPolygon(Loc l) {
-        if (cache.containsKey(l)) return cache.get(l);
+        if (cache.containsKey(l)) return !cache.get(l);
         boolean result = l.within(redTiles);
         cache.put(l, result);
         return !result;
