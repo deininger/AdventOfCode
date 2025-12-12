@@ -80,6 +80,7 @@ public class Day10 extends PuzzleApp {
      private long partOneResult = 0;
 
     public void process() {
+        /*
         for (Machine machine : machines) {
             System.out.println("Processing " + machine);
             State state = new State(machine.numLights());
@@ -94,6 +95,7 @@ public class Day10 extends PuzzleApp {
                 System.out.println("No solution for " + machine + "???");
             }
         }
+        */
     }
 
     @Override
@@ -101,15 +103,84 @@ public class Day10 extends PuzzleApp {
         System.out.println("Part One result = " + partOneResult);
     }
 
+    private StatePartTwo searchPartTwo(Machine m, Queue<StatePartTwo> q, Set<StatePartTwo> seen) {
+        while (!q.isEmpty()) {
+            StatePartTwo s = q.poll();
+            if (seen.contains(s)) continue;
+            seen.add(s);
+
+            if (m.joltageMatch(s.counters())) return s;
+
+            for (int i = 0; i < m.buttonCount(); i++) {
+                StatePartTwo s2 = new StatePartTwo(s);
+                s2.increment(m, i);
+                if (m.joltageMatch(s2.counters())) return s2; // shortcut
+                if (m.allowableJoltage(s2.counters())) q.add(s2);
+            }
+        }
+
+        return null;
+    }
+
+    private long partTwoResult = 0;
+
     @Override
     public void processPartTwo() {
-
+        for (Machine machine : machines) {
+            System.out.println("Processing " + machine);
+            StatePartTwo state = new StatePartTwo(machine.numLights());
+            Queue<StatePartTwo> q = new LinkedList<>();
+            q.add(state);
+            Set<StatePartTwo> seen = new HashSet<>();
+            StatePartTwo solution = searchPartTwo(machine, q, seen);
+            if (solution != null) {
+                System.out.println("Solved " + machine + " in " + solution.depth());
+                partTwoResult += solution.depth();
+            } else {
+                System.out.println("No solution for " + machine + "???");
+            }
+        }
     }
 
     @Override
     public void resultsPartTwo() {
-
+        System.out.println("Part Two result = " + partTwoResult);
     }
+
+    private static class StatePartTwo {
+        private final int[] counters;
+        private int depth;
+
+        public StatePartTwo(int numCounters) {
+            this.counters = new int[numCounters];
+            for (int i = 0; i < numCounters; i++) counters[i] = 0;
+            this.depth = 0;
+        }
+
+        public StatePartTwo(StatePartTwo other) {
+            this.counters = Arrays.copyOf(other.counters, other.counters.length);
+            this.depth = other.depth;
+        }
+
+        public void increment(Machine m, int button) {
+            Set<Integer> actions = m.buttons.get(button);
+            for (Integer action : actions) counters[action]++;
+            depth++;
+        }
+
+        public int[] counters() {
+            return counters;
+        }
+
+        public int depth() {
+            return depth;
+        }
+
+        public String toString() {
+            return Arrays.toString(counters) + " (" + depth +")";
+        }
+    }
+
 
     private static class State {
         private final BitSet bs;
@@ -137,6 +208,10 @@ public class Day10 extends PuzzleApp {
 
         public int depth() {
             return depth;
+        }
+
+        public String toString() {
+            return bs.toString() + " (" + depth +")";
         }
     }
 
@@ -171,8 +246,24 @@ public class Day10 extends PuzzleApp {
             return solved;
         }
 
+        public boolean joltageMatch(int[] counters) {
+            boolean solved = true;
+            for (int i = 0; solved && i < numLights; i++) {
+                solved = joltages.get(i).equals(counters[i]);
+            }
+            return solved;
+        }
+
+        public boolean allowableJoltage(int[] counters) {
+            boolean ok = true;
+            for (int i = 0; ok && i < numLights; i++) {
+                ok = (joltages.get(i).compareTo(counters[i]) >= 0);
+            }
+            return ok;
+        }
+
         public String toString() {
-            return targetLights;
+            return targetLights + " " + joltages;
         }
     }
 }

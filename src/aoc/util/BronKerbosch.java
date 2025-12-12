@@ -7,7 +7,7 @@ import java.util.*;
  * to use a Map of Nodes instead of a Graph. The Map provides a convenient lookup of Node by its name (V),
  * and each Node holds a Map of its neighbors, which is used to determine adjacency.
  *
- * The purpose of this agorithm is to efficiently find the maximal cliques of the graph (set of Nodes).
+ * The purpose of this algorithm is to efficiently find the maximal cliques of the graph (set of Nodes).
  * A "clique" is a set of Nodes which are all neighbors of each other.
  */
 public class BronKerbosch<V> {

@@ -37,7 +37,7 @@ public class Node<T> implements Comparable<Object> {
     }
 
     /*
-     * Use this when you want your connections to be bi-directional an un-weighted.
+     * Use this when you want your connections to be bi-directional and un-weighted.
      */
     public void connect(Node<T> node) {
         if (this == node) throw new IllegalArgumentException("Can't connect node to itself");
