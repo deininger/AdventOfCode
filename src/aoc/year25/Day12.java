@@ -14,7 +14,7 @@ public class Day12 extends PuzzleApp {
 
     @Override
     public String filename() {
-        return "data/year25/day12-small";
+        return "data/year25/day12";
     }
 
     private int shapeCounter;
@@ -61,51 +61,29 @@ public class Day12 extends PuzzleApp {
             return true; // Success! All shapes placed.
         }
 
-        // 1. Find the first empty cell (r, c)
-        int r = -1, c = -1;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (!grid[i][j]) {
-                    r = i;
-                    c = j;
-                    break;
-                }
-            }
-            if (r != -1) break;
-        }
+        for (int r = 0; r <= grid.length - 3; r++) {
+            for (int c = 0; c <= grid[0].length - 3; c++) {
+                // if (grid[r][c]) continue; // Skip any already-full starting-spots
+                // Can't do this because the shapes don't all have (0,0) filled in!!
 
-        if (r == -1) {
-            // Grid is full, but we still have shapes to place.
-            return false;
-        }
+                // Iterate through the list of shapes to place
+                for (int i = 0; i < shapesToPlace.size(); i++) {
+                    Shape shapeToTry = shapesToPlace.get(i);
 
-        // 2. Iterate through the list of shapes to place
-        for (int i = 0; i < shapesToPlace.size(); i++) {
-            Shape shapeToTry = shapesToPlace.get(i);
+                    // Try each unique orientation of the shape
+                    for (int mask : shapeToTry.getVariationMasks()) {
+                        // Try to place the shape anchored at the given spot
+                        if (fits(grid, mask, r, c)) {
+                            place(grid, mask, r, c, true); // Place the shape on the grid
+                            shapesToPlace.remove(i); // Remove from list
 
-            // 3. Try each unique orientation of the shape
-            for (int mask : shapeToTry.getVariationMasks()) {
-                // 4. Try to place the shape so it covers the empty cell (r, c)
-                for (int sr = 0; sr < 3; sr++) {
-                    for (int sc = 0; sc < 3; sc++) {
-                        // If the current part of the shape (sr, sc) is solid
-                        if ((mask & (1 << (sr * 3 + sc))) != 0) {
-                            // Calculate the top-left position of the shape
-                            int placeR = r - sr;
-                            int placeC = c - sc;
-
-                            if (fits(grid, mask, placeR, placeC)) {
-                                place(grid, mask, placeR, placeC, true);
-                                Shape placedShape = shapesToPlace.remove(i);
-
-                                if (solve(grid, shapesToPlace)) {
-                                    return true; // Solution found!
-                                }
-
-                                // Backtrack
-                                shapesToPlace.add(i, placedShape);
-                                place(grid, mask, placeR, placeC, false);
+                            if (solve(grid, shapesToPlace)) {
+                                return true; // Solution found!
                             }
+
+                            // Backtrack
+                            shapesToPlace.add(i, shapeToTry); // Add shape back to its original position
+                            place(grid, mask, r, c, false); // Remove the shape from the grid
                         }
                     }
                 }
@@ -116,8 +94,6 @@ public class Day12 extends PuzzleApp {
     }
 
     private boolean fits(boolean[][] grid, int shapeMask, int r, int c) {
-        if (r < 0 || c < 0) return false; // Ensure placement is within bounds from top-left
-
         for (int sr = 0; sr < 3; sr++) {
             for (int sc = 0; sc < 3; sc++) {
                 if ((shapeMask & (1 << (sr * 3 + sc))) != 0) {
@@ -142,7 +118,7 @@ public class Day12 extends PuzzleApp {
             }
         }
     }
-    
+
     private String visualize(boolean[][] grid) {
         StringBuilder sb = new StringBuilder("\n");
         for (int r = 0; r < grid.length; r++) {
@@ -154,6 +130,24 @@ public class Day12 extends PuzzleApp {
         return sb.toString();
     }
 
+    private int impossibleCount;
+    private int unlikelyCount;
+    private int easyCount;
+
+    private void cheat(boolean[][] grid, List<Shape> shapesToPlace, Region region) {
+        int gridSize = grid.length * grid[0].length;
+        int adjustedGridSize = ((grid.length / 3) * 3) * ((grid[0].length / 3) * 3);
+        int totalShapeSize = shapesToPlace.stream().mapToInt(Shape::size).sum();
+        int worstCaseSize = shapesToPlace.size() * 9;
+
+        System.out.println("Total shape size " + totalShapeSize + ", worst case size " + worstCaseSize + ", grid size " + gridSize + " for region " + region);
+
+        if (totalShapeSize > gridSize) impossibleCount++;
+        else if (worstCaseSize <= adjustedGridSize) easyCount++;
+        else unlikelyCount++;
+    }
+
+
     private final AtomicInteger successfulRegions = new AtomicInteger();
 
     public void process() {
@@ -162,16 +156,22 @@ public class Day12 extends PuzzleApp {
             boolean[][] grid = new boolean[r.height()][r.width()];
 
             System.out.println("Attempting to place " + allShapes.size() + " shapes into region " + r);
+            cheat(grid, allShapes, r);
+
+            /*
             if (solve(grid, allShapes)) {
                 successfulRegions.incrementAndGet();
                 System.out.println("Success: " + visualize(grid));
             }
+            */
         }
     }
 
     @Override
     public void results() {
-        System.out.println("Part one results: " + successfulRegions);
+        System.out.println("Impossible count: " + impossibleCount);
+        System.out.println("Unlikely count: " + unlikelyCount);
+        System.out.println("Part one results (easy count): " + (easyCount));
     }
 
     @Override
@@ -202,6 +202,16 @@ public class Day12 extends PuzzleApp {
 
         private Shape(int mask) {
             this.mask = mask;
+        }
+
+        public int size() {
+            int temp = mask;
+            int size = 0;
+            while (temp > 0) {
+                if (temp % 2 == 1) size++;
+                temp >>= 1;
+            }
+            return size;
         }
 
         public Set<Integer> getVariationMasks() {
